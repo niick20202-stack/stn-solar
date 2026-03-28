@@ -69,9 +69,7 @@ function calculate(consumption: number, orientIdx: number, hasStorage: boolean) 
   const annualSavings   = Math.round(selfConsumed * ELECTRICITY_PRICE + feedIn * FEED_IN_RATE)
   const co2Kg           = Math.round(annualProd * CO2_FACTOR)
   const systemCost      = Math.round(kWp * COST_PER_KWP + (hasStorage ? STORAGE_COST : 0))
-  const amortization    = annualSavings > 0 ? Math.round((systemCost / annualSavings) * 10) / 10 : 0
-  const lifetimeReturn  = Math.round(annualSavings * 25 - systemCost)
-  return { kWp, annualProd: Math.round(annualProd), annualSavings, co2Kg, systemCost, amortization, lifetimeReturn }
+  return { kWp, annualProd: Math.round(annualProd), annualSavings, co2Kg, systemCost }
 }
 
 // ── Toggle switch ──────────────────────────────────────────────────
@@ -132,85 +130,6 @@ function ResultCard({ icon, label, value, sub, color }: {
   )
 }
 
-// ── 25-year bar chart ──────────────────────────────────────────────
-function LifetimeChart({ annualSavings, systemCost }: { annualSavings: number; systemCost: number }) {
-  const VW = 300, VH = 70
-  const padL = 4, padR = 4, padB = 14, padT = 6
-  const years = Array.from({ length: 25 }, (_, i) => i + 1)
-  const barW = (VW - padL - padR) / years.length - 1.5
-  const maxVal = annualSavings * 25
-  const range = maxVal + systemCost  // always positive when annualSavings > 0
-  const toH = (v: number) => range > 0 ? ((v + systemCost) / range) * (VH - padT - padB) : 0
-  const zeroY = VH - padB - toH(0)
-  const breakEven = annualSavings > 0 ? Math.ceil(systemCost / annualSavings) : Infinity
-
-  return (
-    <div>
-      <p className="text-[9px] font-bold uppercase tracking-widest mb-3"
-        style={{ fontFamily: 'Space Grotesk', color: 'rgba(255,255,255,0.3)' }}>
-        25-Jahres Übersicht
-      </p>
-      <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="none" className="w-full" style={{ height: 70 }}>
-        {/* zero line */}
-        <line x1={padL} y1={zeroY} x2={VW - padR} y2={zeroY}
-          stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" strokeDasharray="3 3" />
-        {years.map((yr, i) => {
-          const cumulative = annualSavings * yr - systemCost
-          const isProfit = cumulative >= 0
-          const h = Math.max(Math.abs(toH(cumulative) - toH(0)), 0.5)
-          const x = padL + i * ((VW - padL - padR) / years.length)
-          const targetY = isProfit ? zeroY - h : zeroY
-          return (
-            <motion.rect
-              key={yr}
-              x={x} width={barW} rx={1.5}
-              fill={isProfit ? '#5dca8a' : 'rgba(255,100,100,0.5)'}
-              fillOpacity={isProfit ? 0.7 : 0.5}
-              initial={{ y: zeroY, height: 0 }}
-              animate={{ y: targetY, height: h }}
-              transition={{ delay: i * 0.02, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-          )
-        })}
-        {/* Break-even marker */}
-        {breakEven <= 25 && (
-          <line
-            x1={padL + (breakEven - 0.5) * ((VW - padL - padR) / years.length)}
-            y1={padT}
-            x2={padL + (breakEven - 0.5) * ((VW - padL - padR) / years.length)}
-            y2={VH - padB}
-            stroke="#f5b040" strokeWidth="1" strokeOpacity="0.6" strokeDasharray="2 3"
-          />
-        )}
-        {/* Year labels */}
-        {[1, 5, 10, 15, 20, 25].map((yr) => (
-          <text key={yr}
-            x={padL + (yr - 0.5) * ((VW - padL - padR) / years.length)}
-            y={VH - 2} textAnchor="middle"
-            style={{ fontSize: '5px', fontFamily: 'DM Mono', fill: 'rgba(255,255,255,0.2)' }}>
-            {yr}
-          </text>
-        ))}
-      </svg>
-      <div className="flex items-center gap-4 mt-2">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full" style={{ background: '#5dca8a' }} />
-          <span className="text-[8px] font-bold uppercase tracking-widest" style={{ fontFamily: 'Space Grotesk', color: 'rgba(255,255,255,0.25)' }}>Gewinn</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full" style={{ background: 'rgba(255,100,100,0.6)' }} />
-          <span className="text-[8px] font-bold uppercase tracking-widest" style={{ fontFamily: 'Space Grotesk', color: 'rgba(255,255,255,0.25)' }}>Investition</span>
-        </div>
-        {breakEven <= 25 && (
-          <div className="flex items-center gap-1.5">
-            <div className="w-2 h-px" style={{ background: '#f5b040' }} />
-            <span className="text-[8px] font-bold uppercase tracking-widest" style={{ fontFamily: 'Space Grotesk', color: 'rgba(255,255,255,0.25)' }}>Break-Even J.{breakEven}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
 
 // ── Main page ──────────────────────────────────────────────────────
 export default function Rechner() {
@@ -224,8 +143,8 @@ export default function Rechner() {
   const animSavings  = useAnimatedNumber(result.annualSavings)
   const animCo2      = useAnimatedNumber(result.co2Kg)
   const animCost     = useAnimatedNumber(result.systemCost)
-  const animAmort    = useAnimatedNumber(result.amortization, 1)
-  const animLifetime = useAnimatedNumber(result.lifetimeReturn)
+  const animMonthly  = useAnimatedNumber(Math.round(result.annualSavings / 12))
+  const animLifetime = useAnimatedNumber(result.annualSavings * 25)
 
   const handleConsumption = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setConsumption(Number(e.target.value))
@@ -269,7 +188,7 @@ export default function Rechner() {
             </h1>
             <p className="text-base max-w-lg mx-auto"
               style={{ color: 'rgba(209,197,176,0.65)', lineHeight: 1.7, fontFamily: 'DM Sans' }}>
-              Geben Sie Ihren Stromverbrauch ein — wir berechnen Ersparnis, Amortisation und CO₂-Bilanz.
+              Geben Sie Ihren Stromverbrauch ein — wir berechnen Ihre jährliche Ersparnis und CO₂-Bilanz.
             </p>
           </motion.div>
 
@@ -415,34 +334,28 @@ export default function Rechner() {
                   value={`${animCo2.toLocaleString('de-DE')} kg`} sub="pro Jahr" color="#5dca8a" />
                 <ResultCard icon="payments" label="Systemkosten"
                   value={`~${animCost.toLocaleString('de-DE')} €`} color="#4a9eff" />
-                <ResultCard icon="schedule" label="Amortisation"
-                  value={`${animAmort} Jahre`} color="#c084fc" />
+                <ResultCard icon="savings" label="Ersparnis / Monat"
+                  value={`~${animMonthly.toLocaleString('de-DE')} €`} color="#c084fc" />
               </div>
 
-              {/* Lifetime return */}
+              {/* Lifetime savings */}
               <div className="glow-card rounded-2xl p-5"
                 style={{ background: 'rgba(93,202,138,0.06)', border: '1px solid rgba(93,202,138,0.15)' }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[9px] font-bold uppercase tracking-widest"
                       style={{ fontFamily: 'Space Grotesk', color: 'rgba(93,202,138,0.7)' }}>
-                      25-Jahres Nettogewinn
+                      Gesamtersparnis über 25 Jahre
                     </p>
                     <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans' }}>
-                      nach Abzug der Investitionskosten
+                      bei gleichbleibenden Strompreisen
                     </p>
                   </div>
                   <span className="font-black"
-                    style={{ fontFamily: 'DM Mono', fontSize: '1.4rem', letterSpacing: '-0.04em', color: result.lifetimeReturn >= 0 ? '#5dca8a' : 'rgba(255,100,100,0.8)' }}>
-                    {result.lifetimeReturn >= 0 ? '+' : ''}{animLifetime.toLocaleString('de-DE')} €
+                    style={{ fontFamily: 'DM Mono', fontSize: '1.4rem', letterSpacing: '-0.04em', color: '#5dca8a' }}>
+                    +{animLifetime.toLocaleString('de-DE')} €
                   </span>
                 </div>
-              </div>
-
-              {/* Chart */}
-              <div className="glow-card rounded-2xl p-5"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <LifetimeChart annualSavings={result.annualSavings} systemCost={result.systemCost} />
               </div>
 
               {/* CTA */}

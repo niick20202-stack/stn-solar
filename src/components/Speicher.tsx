@@ -26,7 +26,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
   return (
     <section
       id="speicher"
-      className="relative z-10 py-24 px-6 overflow-hidden"
+      className="relative z-10 py-14 md:py-24 px-5 md:px-6 overflow-hidden"
       style={{ background: 'linear-gradient(to bottom, #131313, #0c0f1a, #131313)' }}
     >
       {/* Ambient glows */}
@@ -46,7 +46,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
       />
 
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left: content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -61,7 +61,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               Energiespeicher
             </span>
             <h2
-              className="font-black text-white mt-3 mb-6 leading-tight"
+              className="font-black text-white mt-3 mb-4 md:mb-6 leading-tight"
               style={{
                 fontFamily: 'DM Sans, sans-serif',
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
@@ -74,7 +74,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               Sie ihn brauchen
             </h2>
             <p
-              className="text-base leading-relaxed mb-8 max-w-md"
+              className="text-base leading-relaxed mb-5 md:mb-8 max-w-md"
               style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7 }}
             >
               Unser Hochleistungsspeicher hält Ihren selbst erzeugten Solarstrom auch dann
@@ -83,7 +83,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
             </p>
 
             {/* Features grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 mb-5 md:mb-8">
               {features.map((f, i) => (
                 <motion.div
                   key={f.label}
@@ -141,7 +141,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
           {/* Right: image + floating stat cards */}
           <motion.div
             className="relative rounded-3xl overflow-hidden"
-            style={{ minHeight: '440px' }}
+            style={{ minHeight: 'clamp(260px, 50vw, 440px)' }}
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}

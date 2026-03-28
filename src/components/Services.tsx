@@ -106,10 +106,10 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
   const s = services[active]
 
   return (
-    <section id="angebote" className="relative z-10 max-w-7xl mx-auto px-6 py-20">
+    <section id="angebote" className="relative z-10 max-w-7xl mx-auto px-5 md:px-6 py-12 md:py-20">
       {/* Heading */}
       <motion.div
-        className="mb-10"
+        className="mb-6 md:mb-10"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -148,10 +148,10 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
       >
         {/* Content area: text left, image right */}
-        <div className="flex flex-col md:flex-row min-h-[420px]">
+        <div className="flex flex-col md:flex-row md:min-h-[420px]">
 
           {/* LEFT — benefits content */}
-          <div className="flex-1 p-7 md:p-10 flex flex-col justify-between relative overflow-hidden">
+          <div className="flex-1 p-5 md:p-10 flex flex-col justify-between relative overflow-hidden">
             <div
               className="absolute top-0 left-0 w-64 h-64 pointer-events-none"
               style={{
@@ -199,14 +199,14 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
 
                   {/* Description */}
                   <p
-                    className="text-sm leading-relaxed mb-7"
+                    className="text-sm leading-relaxed mb-4 md:mb-7"
                     style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7, maxWidth: '38ch' }}
                   >
                     {s.description}
                   </p>
 
                   {/* Benefits */}
-                  <ul className="space-y-3">
+                  <ul className="space-y-2 md:space-y-3">
                     {s.benefits.map((b, i) => (
                       <motion.li
                         key={b.text}
@@ -241,7 +241,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
 
             {/* CTA */}
             <motion.button
-              className="cta-pill mt-8 self-start flex items-center gap-2 rounded-full px-6 py-3 font-black text-xs uppercase"
+              className="cta-pill mt-5 md:mt-8 self-start flex items-center gap-2 rounded-full px-6 py-3 font-black text-xs uppercase"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif',
                 background: 'linear-gradient(135deg, #f5b040, #e07018)',
@@ -262,7 +262,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
           {/* RIGHT — image */}
           <div
             className="w-full md:w-[48%] flex-shrink-0 relative overflow-hidden"
-            style={{ minHeight: '280px' }}
+            style={{ minHeight: '180px' }}
           >
             <AnimatePresence mode="wait">
               <motion.img

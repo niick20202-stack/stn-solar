@@ -52,7 +52,7 @@ const gradientText = {
 
 export default function Foerderung() {
   return (
-    <section id="foerderung" className="relative z-10 py-24 px-6 overflow-hidden">
+    <section id="foerderung" className="relative z-10 py-14 md:py-24 px-5 md:px-6 overflow-hidden">
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-64 pointer-events-none"
         style={{
@@ -63,7 +63,7 @@ export default function Foerderung() {
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <motion.div
-          className="mb-14"
+          className="mb-8 md:mb-14"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -96,11 +96,11 @@ export default function Foerderung() {
         </motion.div>
 
         {/* Förderung cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-10 md:mb-16">
           {foerderungen.map((f, i) => (
             <motion.div
               key={f.title}
-              className="glow-card rounded-3xl p-6 flex flex-col gap-4"
+              className="glow-card rounded-3xl p-4 md:p-6 flex flex-col gap-3 md:gap-4"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.07)',

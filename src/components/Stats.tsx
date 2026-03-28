@@ -79,7 +79,7 @@ function CounterSection() {
         className="font-black text-white leading-none tracking-tighter"
         style={{
           fontFamily: 'DM Sans, sans-serif',
-          fontSize: 'clamp(5rem, 12vw, 10rem)',
+          fontSize: 'clamp(3.5rem, 12vw, 10rem)',
           letterSpacing: '-0.06em',
         }}
       >
@@ -102,7 +102,7 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
   return (
     <section
       id="feedback"
-      className="relative overflow-hidden py-32 px-6"
+      className="relative overflow-hidden py-16 md:py-32 px-5 md:px-6"
       style={{ background: 'linear-gradient(to bottom, #131313, #0a0f1e, #131313)' }}
     >
       {/* Ambient glows */}
@@ -121,7 +121,7 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
       <div className="max-w-7xl mx-auto">
         {/* Social proof badges */}
         <motion.div
-          className="flex justify-center mb-12 reveal"
+          className="flex justify-center mb-8 md:mb-12 reveal"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -171,20 +171,20 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
         </motion.div>
 
         {/* Counter */}
-        <div className="text-center mb-16 reveal">
+        <div className="text-center mb-10 md:mb-16 reveal">
           <CounterSection />
         </div>
 
         {/* Rating widget */}
         <motion.div
-          className="flex justify-center mb-20 reveal"
+          className="flex justify-center mb-12 md:mb-20 reveal"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
           <div
-            className="glow-card flex flex-col items-center px-10 py-8 rounded-3xl"
+            className="glow-card flex flex-col items-center px-6 py-5 md:px-10 md:py-8 rounded-3xl"
             style={{
               background: 'rgba(255,255,255,0.05)',
               backdropFilter: 'blur(16px)',
@@ -220,7 +220,7 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name}
-              className="customer-card rounded-3xl p-8 reveal"
+              className="customer-card rounded-3xl p-5 md:p-8 reveal"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -265,14 +265,14 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
 
         {/* CTA Banner */}
         <motion.div
-          className="mt-20 reveal"
+          className="mt-12 md:mt-20 reveal"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9 }}
         >
           <div
-            className="relative rounded-3xl p-10 md:p-16 overflow-hidden text-center"
+            className="relative rounded-3xl p-7 md:p-16 overflow-hidden text-center"
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.04) 100%)',
               border: '1px solid rgba(255,255,255,0.08)',
@@ -316,14 +316,14 @@ export default function Stats({ onAngebot }: { onAngebot: () => void }) {
               </span>
             </h2>
             <p
-              className="text-base max-w-lg mx-auto mb-10"
+              className="text-base max-w-lg mx-auto mb-7 md:mb-10"
               style={{ color: 'rgba(209,197,176,0.7)', lineHeight: 1.7 }}
             >
               Kostenlose Beratung, transparente Angebote, professionelle Installation —
               alles aus einer Hand.
             </p>
             <motion.button
-              className="cta-pill inline-flex items-center gap-3 rounded-full px-10 py-5 font-black text-sm uppercase tracking-wider"
+              className="cta-pill inline-flex items-center gap-3 rounded-full px-7 py-4 md:px-10 md:py-5 font-black text-sm uppercase tracking-wider"
               style={{
                 background: 'linear-gradient(135deg, #f5b040, #e07018)',
                 color: '#2a1600',

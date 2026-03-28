@@ -8,11 +8,11 @@ const faqs = [
   },
   {
     q: 'Lohnt sich eine Solaranlage auch bei bewölktem Wetter?',
-    a: 'Ja. Moderne Hochleistungsmodule produzieren auch bei diffusem Licht oder Bewölkung signifikant Strom. In Deutschland sind durchschnittlich 950–1.300 Volllaststunden pro Jahr realistisch – die Anlage amortisiert sich typischerweise in 7–10 Jahren.',
+    a: 'Ja. Moderne Hochleistungsmodule produzieren auch bei diffusem Licht oder Bewölkung signifikant Strom. In Deutschland sind durchschnittlich 950–1.300 Volllaststunden pro Jahr realistisch — Ihre Anlage arbeitet das ganze Jahr für Sie.',
   },
   {
     q: 'Welche Garantien erhalte ich auf die Anlage?',
-    a: 'Auf die Solarmodule gewähren wir 25 Jahre Leistungsgarantie (min. 80 % Output), auf den Wechselrichter 10 Jahre und auf den Batteriespeicher 10 Jahre Kapazitätsgarantie. Dazu kommt unsere eigene Installationsgarantie.',
+    a: 'Sie erhalten 25 Jahre Garantie auf die Solarmodule, 10 Jahre auf Wechselrichter und Batteriespeicher — dazu unsere eigene Installationsgarantie. Sie sind rundum abgesichert.',
   },
   {
     q: 'Kann ich mein Elektroauto mit der Solaranlage laden?',
@@ -44,13 +44,13 @@ export default function FAQ() {
   return (
     <section
       id="faq"
-      className="relative z-10 py-24 px-6"
+      className="relative z-10 py-14 md:py-24 px-5 md:px-6"
       style={{ background: 'linear-gradient(to bottom, #131313, #0a0e1a, #131313)' }}
     >
       <div className="max-w-3xl mx-auto">
         {/* Heading */}
         <motion.div
-          className="text-center mb-14"
+          className="text-center mb-8 md:mb-14"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -95,7 +95,7 @@ export default function FAQ() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
             >
               <button
-                className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                className="w-full flex items-center justify-between gap-4 px-4 py-4 md:px-6 md:py-5 text-left"
                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                 onClick={() => setOpen(open === i ? null : i)}
               >
@@ -128,7 +128,7 @@ export default function FAQ() {
                     style={{ overflow: 'hidden' }}
                   >
                     <p
-                      className="px-6 pb-5 text-sm leading-relaxed"
+                      className="px-4 pb-4 md:px-6 md:pb-5 text-sm leading-relaxed"
                       style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7 }}
                     >
                       {faq.a}

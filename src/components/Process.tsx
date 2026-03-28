@@ -39,11 +39,11 @@ const gradientText = {
 
 export default function Process() {
   return (
-    <section id="prozess" className="relative z-10 py-24 px-6 overflow-hidden">
+    <section id="prozess" className="relative z-10 py-12 md:py-24 px-5 md:px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <motion.div
-          className="mb-16"
+          className="mb-8 md:mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -82,7 +82,7 @@ export default function Process() {
           {steps.map((step, i) => (
             <motion.div
               key={step.number}
-              className="glow-card relative flex flex-col items-start md:items-center text-left md:text-center gap-5 p-7 rounded-3xl"
+              className="glow-card relative flex flex-col items-start md:items-center text-left md:text-center gap-4 p-5 md:p-7 rounded-3xl"
               style={{
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid rgba(255,255,255,0.07)',

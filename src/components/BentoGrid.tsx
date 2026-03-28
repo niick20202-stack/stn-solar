@@ -500,8 +500,8 @@ function PerformanceCard() {
 
                 {/* Legend row */}
                 {[
-                  { label: 'J1–J5 · 4 Garantien', color: '#c084fc' },
-                  { label: 'J6–J10 · 3',           color: '#4a9eff' },
+                  { label: 'J1–J5 · Vollschutz',    color: '#c084fc' },
+                  { label: 'J6–J10 · Erweitert',   color: '#4a9eff' },
                   { label: 'J11–J25 · Modul',       color: '#f5b040' },
                 ].map((leg, i) => (
                   <g key={leg.label}>
@@ -544,7 +544,6 @@ function PerformanceCard() {
         {active === 2 && mouseX !== null && (() => {
           const cW = VW - padL - padR
           const yr = Math.round(Math.min(25, Math.max(0, (mouseX - padL) / cW * 25)))
-          const cnt = [25, 10, 10, 5].filter(y => yr <= y).length
           return (
             <div className="absolute top-0 px-2 py-1 rounded-lg pointer-events-none"
               style={{
@@ -556,7 +555,7 @@ function PerformanceCard() {
                 fontSize: '10px', fontWeight: 700, color: col,
                 whiteSpace: 'nowrap',
               }}>
-              Jahr {yr} · {cnt}/4 aktiv
+              Jahr {yr} · abgesichert
             </div>
           )
         })()}
@@ -595,7 +594,7 @@ function FeatureCard({ onAngebot }: { onAngebot: () => void }) {
           className="text-[9px] font-bold uppercase tracking-[0.3em]"
           style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040' }}
         >
-          Innovation 2024
+          Flaggschiff Produkt
         </span>
         <h3
           className="text-white mt-4 leading-tight"
@@ -640,6 +639,7 @@ function FeatureCard({ onAngebot }: { onAngebot: () => void }) {
               borderColor: 'rgba(255,255,255,0.12)',
               letterSpacing: '0.15em',
             }}
+            onClick={() => document.getElementById('speicher')?.scrollIntoView({ behavior: 'smooth' })}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >

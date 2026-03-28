@@ -77,7 +77,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
             variants={item}
             className="leading-none text-white"
             style={{
-              fontSize: 'clamp(3rem, 9vw, 7.5rem)',
+              fontSize: 'clamp(2.5rem, 9vw, 7.5rem)',
               lineHeight: 0.9,
             }}
           >
@@ -135,7 +135,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
 
           <motion.p
             variants={item}
-            className="mt-8 max-w-md text-lg leading-relaxed"
+            className="mt-5 md:mt-8 max-w-md text-lg leading-relaxed"
             style={{
               fontFamily: 'DM Sans, sans-serif',
               color: 'rgba(209,197,176,0.85)',
@@ -146,7 +146,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
             <span style={{ color: 'rgba(255,255,255,0.85)' }}>Effizient, ästhetisch</span> und für Generationen gebaut.
           </motion.p>
 
-          <motion.div variants={item} className="mt-10 flex flex-wrap gap-4 items-center">
+          <motion.div variants={item} className="mt-7 md:mt-10 flex flex-wrap gap-4 items-center">
             <motion.button
               className="cta-pill flex items-center gap-3 rounded-full px-8 py-4 font-black text-sm uppercase tracking-wider"
               style={{
@@ -190,7 +190,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
           {/* Quick stats row */}
           <motion.div
             variants={item}
-            className="mt-16 flex flex-wrap gap-8"
+            className="mt-8 md:mt-16 flex flex-wrap gap-5 md:gap-8"
           >
             {[
               { value: '1.000+', label: 'Kunden', icon: 'groups' },
@@ -233,7 +233,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
 
         {/* Scroll indicator */}
         <motion.div
-          className="mt-12 self-start flex flex-col items-center gap-2"
+          className="mt-6 md:mt-12 self-start flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
