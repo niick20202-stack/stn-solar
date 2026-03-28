@@ -93,7 +93,7 @@ const gradientText = {
   backgroundClip: 'text',
 }
 
-export default function Services() {
+export default function Services({ onAngebot }: { onAngebot: () => void }) {
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState(1)
 
@@ -136,7 +136,7 @@ export default function Services() {
 
       {/* Main card */}
       <motion.div
-        className="rounded-3xl overflow-hidden"
+        className="glow-card rounded-3xl overflow-hidden"
         style={{
           background: 'rgba(255,255,255,0.07)',
           border: '1px solid rgba(255,255,255,0.12)',
@@ -250,6 +250,7 @@ export default function Services() {
                 border: 'none',
                 cursor: 'pointer',
               }}
+              onClick={onAngebot}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -269,6 +270,7 @@ export default function Services() {
                 src={s.image}
                 alt={s.title}
                 className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
                 variants={imageVariants}
                 initial="enter"
                 animate="center"

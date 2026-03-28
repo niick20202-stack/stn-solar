@@ -14,7 +14,7 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] as const } },
 }
 
-export default function Hero() {
+export default function Hero({ onAngebot }: { onAngebot: () => void }) {
   return (
     <section
       id="hero"
@@ -27,6 +27,8 @@ export default function Hero() {
           src={HERO_BG}
           alt=""
           className="w-full h-full object-cover"
+          fetchPriority="high"
+          decoding="async"
           style={{ opacity: 0.45 }}
         />
         <div
@@ -154,6 +156,7 @@ export default function Hero() {
                 letterSpacing: '0.12em',
                 fontSize: '12px',
               }}
+              onClick={onAngebot}
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -163,21 +166,25 @@ export default function Hero() {
               Kostenlos beraten lassen
             </motion.button>
 
-            <motion.a
-              href="#loesungen"
+            <motion.button
+              onClick={() => document.getElementById('loesungen')?.scrollIntoView({ behavior: 'smooth' })}
               className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif',
                 color: 'rgba(255,255,255,0.6)',
                 letterSpacing: '0.15em',
                 fontSize: '11px',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
               }}
               whileHover={{ color: '#f5b040', x: 4 }}
               transition={{ duration: 0.2 }}
             >
               Unsere Produkte
               <span className="material-symbols-outlined text-base">arrow_forward</span>
-            </motion.a>
+            </motion.button>
           </motion.div>
 
           {/* Quick stats row */}

@@ -98,7 +98,7 @@ function CounterSection() {
   )
 }
 
-export default function Stats() {
+export default function Stats({ onAngebot }: { onAngebot: () => void }) {
   return (
     <section
       id="feedback"
@@ -184,7 +184,7 @@ export default function Stats() {
           transition={{ duration: 0.7 }}
         >
           <div
-            className="flex flex-col items-center px-10 py-8 rounded-3xl"
+            className="glow-card flex flex-col items-center px-10 py-8 rounded-3xl"
             style={{
               background: 'rgba(255,255,255,0.05)',
               backdropFilter: 'blur(16px)',
@@ -331,6 +331,7 @@ export default function Stats() {
                 letterSpacing: '0.12em',
                 fontSize: '13px',
               }}
+              onClick={onAngebot}
               whileHover={{ scale: 1.06, y: -4 }}
               whileTap={{ scale: 0.97 }}
             >

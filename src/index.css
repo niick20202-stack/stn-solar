@@ -29,41 +29,9 @@
   0%, 100% { opacity: 0.25; }
   50% { opacity: 0.65; }
 }
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-18px) rotate(2deg); }
-}
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(245,176,64,0.2), 0 0 60px rgba(245,176,64,0.1); }
-  50% { box-shadow: 0 0 40px rgba(245,176,64,0.5), 0 0 100px rgba(245,176,64,0.2); }
-}
-@keyframes draw-line {
-  from { stroke-dashoffset: 300; }
-  to { stroke-dashoffset: 0; }
-}
-@keyframes orbit-1 {
-  from { transform: rotate(0deg) translateX(110px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(110px) rotate(-360deg); }
-}
-@keyframes orbit-2 {
-  from { transform: rotate(60deg) translateX(170px) rotate(-60deg); }
-  to   { transform: rotate(420deg) translateX(170px) rotate(-420deg); }
-}
-@keyframes orbit-3 {
-  from { transform: rotate(180deg) translateX(240px) rotate(-180deg); }
-  to   { transform: rotate(540deg) translateX(240px) rotate(-540deg); }
-}
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes spin-slow-rev {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
-}
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* scroll-behavior intentionally omitted — Lenis handles smooth scrolling */
 
 body {
   margin: 0;
@@ -105,7 +73,9 @@ body {
     0 20px 40px -12px rgba(0,0,0,0.4),
     inset 0 1px 0 rgba(255,255,255,0.13),
     inset 1px 0 0 rgba(255,255,255,0.06);
-  transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
+  transition: background 0.6s cubic-bezier(0.16,1,0.3,1),
+              border-color 0.6s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.6s cubic-bezier(0.16,1,0.3,1);
 }
 .liquid-glass-hover:hover {
   background: rgba(255,255,255,0.13);
@@ -141,7 +111,11 @@ body {
   transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
   will-change: transform, opacity;
 }
-.reveal.active { opacity: 1; transform: translateY(0); }
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto; /* release GPU layer once animation is done */
+}
 
 /* Slider */
 .slide {
@@ -193,9 +167,12 @@ body {
 
 /* Feature card */
 .feature-card {
+  position: relative;
   background: rgba(28,27,27,0.98);
   border: 1px solid rgba(255,255,255,0.05);
-  transition: all 0.6s cubic-bezier(0.16,1,0.3,1);
+  transition: border-color 0.6s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.6s cubic-bezier(0.16,1,0.3,1),
+              transform 0.6s cubic-bezier(0.16,1,0.3,1);
 }
 .feature-card:hover {
   border-color: rgba(245,176,64,0.12);
@@ -205,10 +182,14 @@ body {
 
 /* Customer card */
 .customer-card {
+  position: relative;
   background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.07);
-  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  transition: background 0.5s cubic-bezier(0.16,1,0.3,1),
+              border-color 0.5s cubic-bezier(0.16,1,0.3,1),
+              transform 0.5s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.5s cubic-bezier(0.16,1,0.3,1);
 }
 .customer-card:hover {
   background: rgba(255,255,255,0.07);
@@ -217,21 +198,41 @@ body {
   box-shadow: 0 24px 48px rgba(0,0,0,0.4);
 }
 
-/* Chart line */
-.chart-line {
-  stroke-dasharray: 300;
-  animation: draw-line 2.5s cubic-bezier(0.16,1,0.3,1) 0.8s forwards;
+/* Generic glow card target */
+.glow-card {
+  position: relative;
 }
 
-/* Orbit animations */
-.orbit-dot-1 { animation: orbit-1 14s linear infinite; }
-.orbit-dot-2 { animation: orbit-2 22s linear infinite; }
-.orbit-dot-3 { animation: orbit-3 32s linear infinite; }
-.spin-slow    { animation: spin-slow 25s linear infinite; }
-.spin-slow-r  { animation: spin-slow-rev 20s linear infinite; }
-.pulse-soft   { animation: pulse-soft 3.5s ease-in-out infinite; }
-.float-anim   { animation: float 6s ease-in-out infinite; }
-.glow-ring    { animation: glow-pulse 3s ease-in-out infinite; }
+/* Edge glow via border-mask technique */
+.feature-card::before,
+.customer-card::before,
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: radial-gradient(
+    200px circle at var(--glow-x, -200px) var(--glow-y, -200px),
+    rgba(245, 176, 64, calc(0.65 * var(--glow-op, 0))),
+    rgba(224, 112, 24, calc(0.2 * var(--glow-op, 0))) 50%,
+    transparent 70%
+  ) border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pulse-soft { animation: pulse-soft 3.5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-soft { animation: none; opacity: 0.4; }
+  .reveal { transition: none; }
+}
 
 /* Noise grain overlay */
 .grain::before {
@@ -243,6 +244,12 @@ body {
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
+}
+
+/* Skip rendering of deeply off-screen sections */
+#prozess, #foerderung, #feedback {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
 }
 
 /* Solar ambient */

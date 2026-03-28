@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const links = [
-  { label: 'Impressum', href: '#' },
-  { label: 'Datenschutz', href: '#' },
-  { label: 'AGB', href: '#' },
-  { label: 'Support', href: '#' },
+  { label: 'Referenzen', to: '/referenzen' },
+  { label: 'Spar-Rechner', to: '/rechner' },
+  { label: 'Impressum', to: '/impressum' },
+  { label: 'Datenschutz', to: '/datenschutz' },
 ]
 
 const socials = [
-  { icon: 'language', label: 'Website' },
-  { icon: 'mail', label: 'Email' },
-  { icon: 'phone', label: 'Telefon' },
+  { icon: 'language', label: 'Website', href: '/' },
+  { icon: 'mail', label: 'Email', href: 'mailto:info@stn-solar.de' },
+  { icon: 'phone', label: 'Telefon', href: 'tel:+491234567890' },
 ]
 
 export default function Footer() {
@@ -47,14 +48,15 @@ export default function Footer() {
             className="text-[9px] font-bold uppercase tracking-widest text-center md:text-left"
             style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.25)' }}
           >
-            © 2024 STN Solar. Deutsche Ingenieurskunst.
+            © {new Date().getFullYear()} STN Solar. Deutsche Ingenieurskunst.
           </p>
 
           {/* Social icons */}
           <div className="flex gap-3 mt-1">
             {socials.map((s) => (
-              <motion.button
+              <motion.a
                 key={s.label}
+                href={s.href}
                 aria-label={s.label}
                 className="w-9 h-9 rounded-full flex items-center justify-center"
                 style={{
@@ -67,7 +69,7 @@ export default function Footer() {
                 <span className="material-symbols-outlined text-base" style={{ color: 'rgba(255,255,255,0.5)' }}>
                   {s.icon}
                 </span>
-              </motion.button>
+              </motion.a>
             ))}
           </div>
         </div>
@@ -75,15 +77,14 @@ export default function Footer() {
         {/* Links */}
         <nav className="flex flex-wrap justify-center gap-8">
           {links.map((link) => (
-            <motion.a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.to}
               className="text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-200"
               style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.35)' }}
-              whileHover={{ color: '#f5b040' }}
             >
               {link.label}
-            </motion.a>
+            </Link>
           ))}
         </nav>
 

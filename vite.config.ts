@@ -8,4 +8,22 @@ export default defineConfig({
     tailwindcss(),
     react(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor'
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'motion'
+          }
+          if (id.includes('node_modules/lenis')) {
+            return 'lenis'
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 })
