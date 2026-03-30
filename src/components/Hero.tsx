@@ -69,7 +69,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
               <span className="material-symbols-outlined text-sm icon-filled" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 bolt
               </span>
-              Deutsche Ingenieurskunst · Seit 2018
+              Von Angebot bis Inbetriebnahme — Alles aus einer Hand
             </span>
           </motion.div>
 
@@ -142,8 +142,7 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
               lineHeight: 1.65,
             }}
           >
-            Wir vereinen deutsche Ingenieurskunst mit der Kraft der Sonne.{' '}
-            <span style={{ color: 'rgba(255,255,255,0.85)' }}>Effizient, ästhetisch</span> und für Generationen gebaut.
+            Bis zu <span style={{ color: 'rgba(255,255,255,0.92)', fontWeight: 700 }}>80 % weniger Stromkosten</span> — Ihr regionaler Solarpartner übernimmt alles: Planung, Förderung, Montage und Inbetriebnahme.
           </motion.p>
 
           <motion.div variants={item} className="mt-7 md:mt-10 flex flex-wrap gap-4 items-center">
@@ -193,8 +192,8 @@ export default function Hero({ onAngebot }: { onAngebot: () => void }) {
             className="mt-8 md:mt-16 flex flex-wrap gap-5 md:gap-8"
           >
             {[
-              { value: '1.000+', label: 'Kunden', icon: 'groups' },
-              { value: '98,1%', label: 'Wirkungsgrad', icon: 'bolt' },
+              { value: '1.000+', label: 'Anlagen', icon: 'groups' },
+              { value: '0 %', label: 'Mehrwertsteuer', icon: 'euro' },
               { value: '25 J.', label: 'Garantie', icon: 'verified' },
             ].map((stat) => (
               <div key={stat.label} className="flex items-center gap-3">

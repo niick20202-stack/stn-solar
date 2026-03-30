@@ -3,6 +3,7 @@ import Lenis from 'lenis'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import BentoGrid from '../components/BentoGrid'
+import ComparisonSection from '../components/ComparisonSection'
 import CursorGlow from '../components/CursorGlow'
 import ReonicModal from '../components/ReonicModal'
 import StickyCTA from '../components/StickyCTA'
@@ -80,6 +81,7 @@ export default function Home() {
       <main className="relative z-10 pb-36 md:pb-0">
         <Hero onAngebot={openModal} />
         <BentoGrid onAngebot={openModal} />
+        <ComparisonSection onAngebot={openModal} />
         <Suspense fallback={null}>
           <Divider />
           <Process />
