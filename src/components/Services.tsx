@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const PV_IMG =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuCl6Xq-Haq8zHqKbEtkBdfCGPcx5rVOnDx8MCtlAG4vak1TgE1xvJpOei5LEOubNvKLX5gzu3Q-hys9edqnsMFmrujwhbDJ-BZQYNoYbSpYahkmaxtnzxovf7RNsd_SNoPNsD7CjTHc88rM4sBGsMkkhCkc6svaEIDglvGSlFkcBcC5-QEMvdrNL8ARShCVRD2qRuG05OulO0YUwtgZW8Dnon-psKDWU-OjV4mPMZaGv0G8Hf6ZrF-0gQkwYimGHFdpgIK1ZaS-k95A'
+import PV_IMG_FILE from '../assets/pvmontage.png'
+const PV_IMG = PV_IMG_FILE
 const STORAGE_IMG =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuDGa7gXnvuLmo3_aJVB7jybmm3jKMPWGzbFcOTn3tvgLOt29ssG3w7Qrg0u5RzX5ujk90id6QkEhnNamCMKpgWpFNTU3qS8WwN96DIlLzO0ZgQgJK4cZ-sB9mUrEBj9Qx8bqOAi8Kp5cqdvooEDiWX8AxPsx5AWu-PZ3dGjK-ddLhpbuN0p674pF9No8AGGkrN7Odq8iDXM8FAF2r7iXjkja1qD_g4gKT0A5U7x0FqXrJBbOVOFBER8JbIn_qPX6Wg52ouy8VuRvxt'
 
-// New order: Solar Montage → Wärmebox → Komplettpaket → Wartung
 const services = [
   {
     label: 'Solar Montage',
@@ -24,11 +23,11 @@ const services = [
     ],
   },
   {
-    label: 'Wärmebox',
+    label: 'Wärmepumpe',
     icon: 'thermostat',
     image: PV_IMG,
     tag: 'Energie',
-    title: 'Wärmebox',
+    title: 'Wärmepumpe',
     description:
       'Heizen Sie mit Solarstrom — effizient, sauber und kostenarm. Bis zu 70 % Einsparung gegenüber konventioneller Heizung.',
     benefits: [
@@ -45,10 +44,10 @@ const services = [
     tag: 'Rundum-Sorglos',
     title: 'Komplettpaket',
     description:
-      'Solaranlage, Speicher, Wärmebox und Wartung — alles aus einer Hand. Das Rundum-Sorglos-Paket für maximale Unabhängigkeit.',
+      'Solaranlage, Speicher, Wärmepumpe und Wartung — alles aus einer Hand. Das Rundum-Sorglos-Paket für maximale Unabhängigkeit.',
     benefits: [
       { text: 'PV-Anlage + Speichersystem', icon: 'battery_charging_full' },
-      { text: 'Wärmebox inklusive', icon: 'thermostat' },
+      { text: 'Wärmepumpe inklusive', icon: 'thermostat' },
       { text: 'Wartungsvertrag 10 Jahre', icon: 'task_alt' },
       { text: 'Ein Ansprechpartner', icon: 'support_agent' },
     ],
@@ -82,7 +81,6 @@ const imageVariants = {
   exit: { opacity: 0, scale: 0.97 },
 }
 
-// Reusable gradient text style for Cormorant italic accents
 const gradientText = {
   fontFamily: 'Instrument Serif, Arial, sans-serif',
   fontStyle: 'italic' as const,
@@ -122,11 +120,12 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
           Unsere Leistungen
         </span>
         <h2
-          className="font-black text-white mt-2 leading-tight"
+          className="font-black mt-2 leading-tight"
           style={{
             fontFamily: 'DM Sans, sans-serif',
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             letterSpacing: '-0.04em',
+            color: '#1a1a1a',
           }}
         >
           Was wir{' '}
@@ -136,12 +135,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
 
       {/* Main card */}
       <motion.div
-        className="glow-card rounded-3xl overflow-hidden"
-        style={{
-          background: 'rgba(255,255,255,0.07)',
-          border: '1px solid rgba(255,255,255,0.12)',
-          backdropFilter: 'blur(8px)',
-        }}
+        className="feature-card glow-card rounded-3xl overflow-hidden"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
@@ -155,7 +149,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
             <div
               className="absolute top-0 left-0 w-64 h-64 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, rgba(245,176,64,0.06) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(245,176,64,0.04) 0%, transparent 70%)',
                 transform: 'translate(-30%, -30%)',
               }}
             />
@@ -177,7 +171,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                     style={{
                       fontFamily: 'Space Grotesk, sans-serif',
                       color: '#f5b040',
-                      background: 'rgba(245,176,64,0.1)',
+                      background: 'rgba(245,176,64,0.08)',
                       border: '1px solid rgba(245,176,64,0.2)',
                     }}
                   >
@@ -187,11 +181,12 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
 
                   {/* Title */}
                   <h3
-                    className="font-black text-white leading-tight mb-3"
+                    className="font-black leading-tight mb-3"
                     style={{
                       fontFamily: 'DM Sans, sans-serif',
                       fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
                       letterSpacing: '-0.03em',
+                      color: '#1a1a1a',
                     }}
                   >
                     {s.title}
@@ -200,7 +195,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                   {/* Description */}
                   <p
                     className="text-sm leading-relaxed mb-4 md:mb-7"
-                    style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7, maxWidth: '38ch' }}
+                    style={{ color: 'rgba(26,26,26,0.6)', lineHeight: 1.7, maxWidth: '38ch' }}
                   >
                     {s.description}
                   </p>
@@ -218,8 +213,8 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                         <div
                           className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0"
                           style={{
-                            background: 'rgba(245,176,64,0.12)',
-                            border: '1px solid rgba(245,176,64,0.2)',
+                            background: 'rgba(245,176,64,0.08)',
+                            border: '1px solid rgba(245,176,64,0.18)',
                           }}
                         >
                           <span
@@ -229,7 +224,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                             {b.icon}
                           </span>
                         </div>
-                        <span className="text-sm font-medium" style={{ color: 'rgba(229,226,225,0.88)' }}>
+                        <span className="text-sm font-medium" style={{ color: 'rgba(26,26,26,0.8)' }}>
                           {b.text}
                         </span>
                       </motion.li>
@@ -244,8 +239,8 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
               className="cta-pill mt-5 md:mt-8 self-start flex items-center gap-2 rounded-full px-6 py-3 font-black text-xs uppercase"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif',
-                background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                color: '#2a1600',
+                background: '#f5900a',
+                color: '#ffffff',
                 letterSpacing: '0.12em',
                 border: 'none',
                 cursor: 'pointer',
@@ -254,8 +249,8 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.97 }}
             >
-              <span className="material-symbols-outlined icon-filled text-sm">wb_sunny</span>
-              Jetzt anfragen
+              <span className="cta-icon"><span className="material-symbols-outlined icon-filled" style={{fontSize:"14px"}}>calculate</span></span>
+              Solarplan erstellen
             </motion.button>
           </div>
 
@@ -280,7 +275,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
             </AnimatePresence>
             <div
               className="absolute inset-y-0 left-0 w-16 pointer-events-none hidden md:block"
-              style={{ background: 'linear-gradient(to right, rgba(22,22,22,0.7), transparent)' }}
+              style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.9), transparent)' }}
             />
           </div>
         </div>
@@ -288,11 +283,11 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
         {/* Bottom tab switcher */}
         <div
           className="flex items-center justify-center gap-2 px-4 py-4 flex-wrap"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}
         >
           <div
             className="flex items-center gap-1 p-1 rounded-full flex-wrap justify-center"
-            style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.06)' }}
           >
             {services.map((svc, i) => (
               <motion.button
@@ -305,7 +300,7 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                   border: 'none',
                   cursor: 'pointer',
                   outline: 'none',
-                  color: i === active ? '#2a1600' : 'rgba(255,255,255,0.5)',
+                  color: i === active ? '#2a1600' : 'rgba(26,26,26,0.5)',
                   position: 'relative',
                   zIndex: 1,
                 }}
@@ -315,13 +310,13 @@ export default function Services({ onAngebot }: { onAngebot: () => void }) {
                   <motion.div
                     layoutId="tab-pill"
                     className="absolute inset-0 rounded-full"
-                    style={{ background: 'linear-gradient(135deg, #f5b040, #e07018)', zIndex: -1 }}
+                    style={{ background: '#f5900a', zIndex: -1 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                   />
                 )}
                 <span
                   className={`material-symbols-outlined text-sm ${i === active ? 'icon-filled' : ''}`}
-                  style={{ color: i === active ? '#2a1600' : 'rgba(255,255,255,0.4)' }}
+                  style={{ color: i === active ? '#2a1600' : 'rgba(26,26,26,0.4)' }}
                 >
                   {svc.icon}
                 </span>

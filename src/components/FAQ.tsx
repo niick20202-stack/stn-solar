@@ -45,7 +45,6 @@ export default function FAQ() {
     <section
       id="faq"
       className="relative z-10 py-14 md:py-24 px-5 md:px-6"
-      style={{ background: 'linear-gradient(to bottom, #131313, #0a0e1a, #131313)' }}
     >
       <div className="max-w-3xl mx-auto">
         {/* Heading */}
@@ -63,11 +62,12 @@ export default function FAQ() {
             Häufige Fragen
           </span>
           <h2
-            className="font-black text-white mt-2 leading-tight"
+            className="font-black mt-2 leading-tight"
             style={{
               fontFamily: 'DM Sans, sans-serif',
               fontSize: 'clamp(2rem, 5vw, 3rem)',
               letterSpacing: '-0.04em',
+              color: '#1a1a1a',
             }}
           >
             Alles Wichtige,{' '}
@@ -82,11 +82,11 @@ export default function FAQ() {
               key={faq.q}
               className="glow-card rounded-2xl overflow-hidden"
               style={{
-                background: open === i ? 'rgba(245,176,64,0.06)' : 'rgba(255,255,255,0.04)',
+                background: open === i ? 'rgba(245,176,64,0.04)' : '#ffffff',
                 border:
                   open === i
-                    ? '1px solid rgba(245,176,64,0.2)'
-                    : '1px solid rgba(255,255,255,0.07)',
+                    ? '1px solid rgba(245,176,64,0.18)'
+                    : '1px solid rgba(0,0,0,0.07)',
                 transition: 'background 0.3s ease, border-color 0.3s ease',
               }}
               initial={{ opacity: 0, y: 20 }}
@@ -100,15 +100,15 @@ export default function FAQ() {
                 onClick={() => setOpen(open === i ? null : i)}
               >
                 <span
-                  className="font-bold text-sm text-white leading-snug"
-                  style={{ fontFamily: 'DM Sans, sans-serif', letterSpacing: '-0.01em' }}
+                  className="font-bold text-sm leading-snug"
+                  style={{ fontFamily: 'DM Sans, sans-serif', letterSpacing: '-0.01em', color: '#1a1a1a' }}
                 >
                   {faq.q}
                 </span>
                 <motion.span
                   className="material-symbols-outlined flex-shrink-0"
                   style={{
-                    color: open === i ? '#f5b040' : 'rgba(255,255,255,0.4)',
+                    color: open === i ? '#f5b040' : 'rgba(26,26,26,0.4)',
                     fontSize: '20px',
                   }}
                   animate={{ rotate: open === i ? 45 : 0 }}
@@ -129,7 +129,7 @@ export default function FAQ() {
                   >
                     <p
                       className="px-4 pb-4 md:px-6 md:pb-5 text-sm leading-relaxed"
-                      style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7 }}
+                      style={{ color: 'rgba(26,26,26,0.6)', lineHeight: 1.7 }}
                     >
                       {faq.a}
                     </p>

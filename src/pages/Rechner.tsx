@@ -363,8 +363,8 @@ export default function Rechner() {
                 onClick={() => setModalOpen(true)}
                 className="cta-pill w-full flex items-center justify-center gap-3 rounded-2xl py-5 font-black text-sm uppercase"
                 style={{
-                  background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                  color: '#2a1600',
+                  background: '#f5900a',
+                  color: '#ffffff',
                   fontFamily: 'Space Grotesk',
                   letterSpacing: '0.12em',
                   fontSize: '13px',
@@ -373,8 +373,8 @@ export default function Rechner() {
                 }}
                 whileHover={{ scale: 1.02, y: -3 }}
                 whileTap={{ scale: 0.98 }}>
-                <span className="material-symbols-outlined icon-filled text-lg">wb_sunny</span>
                 Persönliches Angebot anfordern
+                <span className="cta-icon"><span className="material-symbols-outlined icon-filled" style={{fontSize:"18px"}}>wb_sunny</span></span>
               </motion.button>
             </motion.div>
           </div>

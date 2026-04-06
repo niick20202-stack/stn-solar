@@ -8,10 +8,10 @@ const Footer = lazy(() => import('../components/Footer'))
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-10">
-      <h2 className="text-white font-black mb-3" style={{ fontFamily: 'DM Sans', fontSize: '1.1rem', letterSpacing: '-0.03em' }}>
+      <h2 className="font-black mb-3" style={{ fontFamily: 'DM Sans', fontSize: '1.1rem', letterSpacing: '-0.03em', color: '#1a1a1a' }}>
         {title}
       </h2>
-      <div className="text-sm leading-relaxed space-y-2" style={{ color: 'rgba(209,197,176,0.65)', fontFamily: 'DM Sans', lineHeight: 1.8 }}>
+      <div className="text-sm leading-relaxed space-y-2" style={{ color: 'rgba(26,26,26,0.65)', fontFamily: 'DM Sans', lineHeight: 1.8 }}>
         {children}
       </div>
     </div>
@@ -21,7 +21,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function Datenschutz() {
   const [modalOpen, setModalOpen] = useState(false)
   return (
-    <div className="grain relative min-h-screen" style={{ backgroundColor: '#131313' }}>
+    <div className="grain relative min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <ReonicModal open={modalOpen} onClose={() => setModalOpen(false)} />
       <Navbar onAngebot={() => setModalOpen(true)} />
       <main className="relative z-10 pt-36 pb-24 px-6">
@@ -31,8 +31,8 @@ export default function Datenschutz() {
               style={{ fontFamily: 'Space Grotesk', color: '#f5b040' }}>
               Rechtliches
             </span>
-            <h1 className="text-white font-black mb-12 leading-tight"
-              style={{ fontFamily: 'DM Sans', fontSize: 'clamp(2rem,5vw,3rem)', letterSpacing: '-0.04em' }}>
+            <h1 className="font-black mb-12 leading-tight"
+              style={{ fontFamily: 'DM Sans', fontSize: 'clamp(2rem,5vw,3rem)', letterSpacing: '-0.04em', color: '#1a1a1a' }}>
               Datenschutzerklärung
             </h1>
 
@@ -50,11 +50,10 @@ export default function Datenschutz() {
 
               <Section title="2. Verantwortliche Stelle">
                 <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br /><br />
-                STN Solar GmbH<br />
-                Musterstraße 1<br />
-                12345 Musterstadt<br />
-                Telefon: +49 (0) 123 456 7890<br />
-                E-Mail: datenschutz@stn-solar.de</p>
+                STN Solar, Inhaber: Serhiy Panasyuk<br />
+                In der Hött 1, 41469 Neuss<br />
+                Telefon: [BITTE EINTRAGEN]<br />
+                E-Mail: info@stn-solar.de</p>
               </Section>
 
               <Section title="3. Hosting">
@@ -87,7 +86,7 @@ export default function Datenschutz() {
               </Section>
 
               <Section title="7. Widerruf Ihrer Einwilligung">
-                <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt. Kontaktieren Sie uns hierfür unter: datenschutz@stn-solar.de</p>
+                <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt. Kontaktieren Sie uns hierfür unter: info@stn-solar.de</p>
               </Section>
 
               <p className="text-[10px] mt-8" style={{ color: 'rgba(255,255,255,0.2)', fontFamily: 'Space Grotesk' }}>

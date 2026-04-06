@@ -1,254 +1,173 @@
 import { motion } from 'framer-motion'
-
-const HERO_BG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl6Xq-Haq8zHqKbEtkBdfCGPcx5rVOnDx8MCtlAG4vak1TgE1xvJpOei5LEOubNvKLX5gzu3Q-hys9edqnsMFmrujwhbDJ-BZQYNoYbSpYahkmaxtnzxovf7RNsd_SNoPNsD7CjTHc88rM4sBGsMkkhCkc6svaEIDglvGSlFkcBcC5-QEMvdrNL8ARShCVRD2qRuG05OulO0YUwtgZW8Dnon-psKDWU-OjV4mPMZaGv0G8Hf6ZrF-0gQkwYimGHFdpgIK1ZaS-k95A'
+import HERO_HAUS from '../assets/hero_haus.webp'
 
 const container = {
   hidden: {},
-  show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.3 },
-  },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.25 } },
+}
+const item = {
+  hidden: { opacity: 0, y: 36 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const } },
 }
 
-const item = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] as const } },
+function Avatar({ bg, letter }: { bg: string; letter: string }) {
+  return (
+    <div
+      className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0"
+      style={{ background: bg, border: '2.5px solid #ffffff', color: '#fff', fontFamily: 'DM Sans, sans-serif' }}
+    >
+      {letter}
+    </div>
+  )
 }
 
 export default function Hero({ onAngebot }: { onAngebot: () => void }) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden flex flex-col"
-      style={{ paddingTop: '100px' }}
+      className="relative overflow-hidden"
+      style={{
+        height: '100vh',
+        backgroundImage:
+          'linear-gradient(rgba(0,0,0,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.055) 1px, transparent 1px)',
+        backgroundSize: '60px 60px',
+        backgroundColor: '#f8f7f5',
+      }}
     >
-      {/* Background image */}
-      <div className="absolute inset-0 z-0">
+      {/* ── House image — bottom 58% of viewport, full-bleed ── */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '68%',
+        }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <img
-          src={HERO_BG}
-          alt=""
-          className="w-full h-full object-cover"
-          fetchPriority="high"
-          decoding="async"
-          style={{ opacity: 0.45 }}
-        />
-        <div
-          className="absolute inset-0"
+          src={HERO_HAUS}
+          alt="Haus mit Solaranlage"
           style={{
-            background:
-              'linear-gradient(to bottom, rgba(19,19,19,0.3) 0%, transparent 40%, rgba(19,19,19,0.8) 80%, #131313 100%)',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center 65%',
+            display: 'block',
           }}
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(to right, rgba(19,19,19,0.5) 0%, transparent 60%)',
-          }}
-        />
-      </div>
 
-      {/* Hero content */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 flex-1 flex flex-col justify-between py-12">
-        {/* Main headline */}
+      </motion.div>
+
+      {/* ── Text & CTA — top portion, sits above image ── */}
+      <div
+        className="relative w-full flex flex-col items-center px-6 text-center"
+        style={{ paddingTop: 'calc(80px + 5vh)', zIndex: 10 }}
+      >
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="mt-6"
+          className="flex flex-col items-center w-full max-w-3xl"
         >
+          {/* Eyebrow pill */}
           <motion.div variants={item}>
             <span
               className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] mb-6 px-4 py-2 rounded-full"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif',
-                color: 'rgba(255,255,255,0.7)',
-                background: 'rgba(255,255,255,0.07)',
-                border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(245,176,64,0.9)',
+                background: 'rgba(245,176,64,0.08)',
+                border: '1px solid rgba(245,176,64,0.2)',
               }}
             >
-              <span className="material-symbols-outlined text-sm icon-filled" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                bolt
-              </span>
-              Von Angebot bis Inbetriebnahme — Alles aus einer Hand
+              <span className="material-symbols-outlined text-sm icon-filled" style={{ color: '#f5b040' }}>location_on</span>
+              Ihr Solarpartner in NRW · Seit 2018
             </span>
           </motion.div>
 
+          {/* Headline */}
           <motion.h1
             variants={item}
-            className="leading-none text-white"
-            style={{
-              fontSize: 'clamp(2.5rem, 9vw, 7.5rem)',
-              lineHeight: 0.9,
-            }}
+            className="leading-none"
+            style={{ fontSize: 'clamp(2.6rem, 7.5vw, 5.5rem)', lineHeight: 0.93, letterSpacing: '-0.04em' }}
           >
-            {/* "Deine Solarlösung —" – same line */}
-            <span className="block" style={{ paddingBottom: '0.12em', overflow: 'visible' }}>
-              <span
-                style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 700, letterSpacing: '-0.04em', color: 'white' }}
-              >
-                Deine{' '}
-              </span>
-              <span
-                style={{
-                  fontFamily: 'Instrument Serif, Arial, sans-serif',
-                  fontStyle: 'italic',
-                  fontWeight: 400,
-                  letterSpacing: '-0.02em',
-                  background: 'linear-gradient(to bottom, #fef2c0 0%, #eda020 52%, #c06010 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                Solarlösung
-              </span>
-              <span
-                style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 700, letterSpacing: '-0.04em', color: 'white' }}
-              >
-                {' —'}
-              </span>
+            <span style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 700, color: '#1a1a1a' }}>
+              Strom selbst erzeugen.{' '}
             </span>
-            {/* "Alles aus" – DM Sans bold */}
-            <span
-              className="block"
-              style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 700, letterSpacing: '-0.05em' }}
-            >
-              Alles aus
-            </span>
-            {/* "einer Hand." – Cormorant italic + gradient */}
-            <span
-              className="block"
-              style={{
-                fontFamily: 'Instrument Serif, Arial, sans-serif',
-                fontStyle: 'italic',
-                fontWeight: 400,
-                letterSpacing: '-0.02em',
-                background: 'linear-gradient(to bottom, #fef2c0 0%, #eda020 52%, #c06010 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              einer Hand.
-            </span>
+            <span style={{
+              fontFamily: 'Instrument Serif, Arial, sans-serif', fontStyle: 'italic', fontWeight: 400,
+              background: 'linear-gradient(135deg, #f5c842 0%, #f5b040 50%, #e07018 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>Kosten drastisch senken.</span>
           </motion.h1>
 
-          <motion.p
-            variants={item}
-            className="mt-5 md:mt-8 max-w-md text-lg leading-relaxed"
-            style={{
-              fontFamily: 'DM Sans, sans-serif',
-              color: 'rgba(209,197,176,0.85)',
-              lineHeight: 1.65,
-            }}
-          >
-            Bis zu <span style={{ color: 'rgba(255,255,255,0.92)', fontWeight: 700 }}>80 % weniger Stromkosten</span> — Ihr regionaler Solarpartner übernimmt alles: Planung, Förderung, Montage und Inbetriebnahme.
+          {/* Subline */}
+          <motion.p variants={item}
+            className="mt-5 text-base md:text-lg"
+            style={{ fontFamily: 'DM Sans, sans-serif', color: 'rgba(26,26,26,0.55)', lineHeight: 1.65, maxWidth: '42ch' }}>
+            Planung, Montage &amp; Netzanschluss —{' '}
+            <span style={{ color: '#1a1a1a', fontWeight: 600 }}>alles aus einer Hand.</span>{' '}
+            Ihr Solarplan in Minuten. Kostenlos.
           </motion.p>
 
-          <motion.div variants={item} className="mt-7 md:mt-10 flex flex-wrap gap-4 items-center">
-            <motion.button
-              className="cta-pill flex items-center gap-3 rounded-full px-8 py-4 font-black text-sm uppercase tracking-wider"
+          {/* CTA row — dark liquid glass capsule */}
+          <motion.div variants={item} className="mt-8 w-full flex justify-center">
+            <div
+              className="flex flex-col sm:flex-row items-center gap-4 px-4 py-3 sm:px-5 sm:py-3"
               style={{
-                background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                color: '#2a1600',
-                fontFamily: 'Space Grotesk, sans-serif',
-                letterSpacing: '0.12em',
-                fontSize: '12px',
+                borderRadius: '999px',
+                background: 'rgba(15,12,8,0.55)',
+                backdropFilter: 'blur(20px) saturate(1.6)',
+                WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)',
               }}
-              onClick={onAngebot}
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.97 }}
             >
-              <span className="material-symbols-outlined icon-filled text-lg">
-                wb_sunny
-              </span>
-              Kostenlos beraten lassen
-            </motion.button>
+              <motion.button
+                className="cta-pill flex items-center justify-center gap-3 rounded-full px-8 py-3.5 font-black text-xs uppercase"
+                style={{
+                  background: '#f5900a',
+                  color: '#ffffff',
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  letterSpacing: '0.1em',
+                  border: 'none',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+                onClick={onAngebot}
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Kostenlosen Solarplan erstellen
+                <span className="cta-icon"><span className="material-symbols-outlined icon-filled" style={{fontSize:"16px"}}>calculate</span></span>
+              </motion.button>
 
-            <motion.button
-              onClick={() => document.getElementById('loesungen')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
-              style={{
-                fontFamily: 'Space Grotesk, sans-serif',
-                color: 'rgba(255,255,255,0.6)',
-                letterSpacing: '0.15em',
-                fontSize: '11px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-              }}
-              whileHover={{ color: '#f5b040', x: 4 }}
-              transition={{ duration: 0.2 }}
-            >
-              Unsere Produkte
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
-            </motion.button>
-          </motion.div>
+              {/* Divider */}
+              <div style={{ width: '1px', height: '32px', background: 'rgba(255,255,255,0.12)', flexShrink: 0 }} className="hidden sm:block" />
 
-          {/* Quick stats row */}
-          <motion.div
-            variants={item}
-            className="mt-8 md:mt-16 flex flex-wrap gap-5 md:gap-8"
-          >
-            {[
-              { value: '1.000+', label: 'Anlagen', icon: 'groups' },
-              { value: '0 %', label: 'Mehrwertsteuer', icon: 'euro' },
-              { value: '25 J.', label: 'Garantie', icon: 'verified' },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-2xl flex items-center justify-center"
-                  style={{
-                    background: 'rgba(255,255,255,0.07)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <span
-                    className="material-symbols-outlined text-lg"
-                    style={{ color: 'rgba(255,255,255,0.7)' }}
-                  >
-                    {stat.icon}
-                  </span>
+              {/* Social proof */}
+              <div className="flex items-center gap-3 pr-1">
+                <div className="flex -space-x-2.5">
+                  <Avatar bg="linear-gradient(135deg,#7c3aed,#a855f7)" letter="M" />
+                  <Avatar bg="linear-gradient(135deg,#0ea5e9,#38bdf8)" letter="S" />
+                  <Avatar bg="linear-gradient(135deg,#f59e0b,#f97316)" letter="L" />
                 </div>
-                <div>
-                  <div
-                    className="font-black text-white text-lg leading-none"
-                    style={{ fontFamily: 'DM Mono, monospace', letterSpacing: '-0.02em' }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div
-                    className="text-[10px] uppercase tracking-widest mt-0.5"
-                    style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.4)' }}
-                  >
-                    {stat.label}
-                  </div>
+                <div style={{ borderLeft: '1px solid rgba(255,255,255,0.12)', paddingLeft: '12px' }}>
+                  <p className="font-bold text-sm text-left" style={{ color: 'rgba(255,255,255,0.92)', fontFamily: 'DM Sans, sans-serif', letterSpacing: '-0.01em' }}>
+                    +40 Kunden
+                  </p>
+                  <p className="text-xs flex items-center gap-1.5 mt-0.5"
+                    style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'Space Grotesk, sans-serif' }}>
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#4ade80', boxShadow: '0 0 6px #4ade8088' }} />
+                    2 Plätze frei
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
           </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="mt-6 md:mt-12 self-start flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-        >
-          <span
-            className="text-[9px] uppercase tracking-[0.4em] font-bold"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.3)' }}
-          >
-            Scroll
-          </span>
-          <motion.div
-            className="w-px h-12 origin-top"
-            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)' }}
-            animate={{ scaleY: [0, 1, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 0.5 }}
-          />
         </motion.div>
       </div>
     </section>

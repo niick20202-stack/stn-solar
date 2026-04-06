@@ -1,200 +1,155 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const FEATURE_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGa7gXnvuLmo3_aJVB7jybmm3jKMPWGzbFcOTn3tvgLOt29ssG3w7Qrg0u5RzX5ujk90id6QkEhnNamCMKpgWpFNTU3qS8WwN96DIlLzO0ZgQgJK4cZ-sB9mUrEBj9Qx8bqOAi8Kp5cqdvooEDiWX8AxPsx5AWu-PZ3dGjK-ddLhpbuN0p674pF9No8AGGkrN7Odq8iDXM8FAF2r7iXjkja1qD_g4gKT0A5U7x0FqXrJBbOVOFBER8JbIn_qPX6Wg52ouy8VuRvxt'
+// ── Data ────────────────────────────────────────────────────────────────────
 
 const products = [
   {
-    tag: 'Speicher',
-    tagIcon: 'battery_charging_full',
-    title: 'SMA Home Storage',
-    subtitle: 'Bis zu 16,98 kWh',
-    features: ['16,98 kWh Kapazität', '8.000 Ladezyklen', '10 Jahre Garantie'],
-    icon: 'battery_charging_full',
+    tag: 'Speicher', tagIcon: 'battery_charging_full', title: 'SMA Home Storage', subtitle: 'Strom auch nachts nutzen',
+    features: ['Strom für 2 Tage auf Vorrat', 'Lebensdauer über 20 Jahre', '10 Jahre Vollgarantie'],
   },
   {
-    tag: 'Solarmodul',
-    tagIcon: 'solar_power',
-    title: 'Trina Vertex S+',
-    subtitle: '22% Wirkungsgrad',
-    features: ['22% Modulwirkungsgrad', 'Full Black Bifazial', '25 Jahre Garantie'],
-    icon: 'solar_power',
+    tag: 'Solarmodul', tagIcon: 'solar_power', title: 'Trina Vertex S+', subtitle: 'Auch bei Bewölkung stark',
+    features: ['Leistungsstark — auch ohne pralle Sonne', 'Elegantes schwarzes Design', '25 Jahre Leistungsgarantie'],
   },
   {
-    tag: 'Wechselrichter',
-    tagIcon: 'settings_input_component',
-    title: 'SMA STP10.0',
-    subtitle: '98,1% Effizienz',
-    features: ['98,1% Wirkungsgrad', 'Smart Home Ready', 'WLAN & Ethernet'],
-    icon: 'settings_input_component',
+    tag: 'Wechselrichter', tagIcon: 'settings_input_component', title: 'SMA STP10.0', subtitle: 'Das Herzstück Ihrer Anlage',
+    features: ['Holt alles aus Ihrer Sonne heraus', 'Kompatibel mit Smart-Home-Systemen', 'Einfache Steuerung per App'],
+  },
+  {
+    tag: 'Netzanschluss', tagIcon: 'electrical_services', title: 'Netzanschluss & Einspeisung', subtitle: 'Alles aus einer Hand',
+    features: ['Anmeldung beim Netzbetreiber', 'Einspeisevertrag & Förderantrag', 'Inbetriebnahme & offizielle Abnahme'],
   },
 ]
 
 const reviews = [
-  { text: '"Ästhetisch die schönste Lösung am Markt. Die Full-Black Module sehen auf unserem Dach fantastisch aus!"', author: 'Lukas Müller', city: 'München' },
-  { text: '"Hervorragender Service von der Planung bis zum Anschluss. Die Anlage liefert mehr als versprochen!"', author: 'Markus Weber', city: 'Berlin' },
-  { text: '"Endlich unabhängig vom Stromnetz. Der Speicher war die beste Investition des Jahres."', author: 'Sarah Jenkins', city: 'Hamburg' },
+  { text: '"Die Full-Black Module sehen auf unserem Dach fantastisch aus — und der Ertrag übertrifft alle Erwartungen!"', author: 'Lisa M.', city: 'Köln' },
+  { text: '"Von der Planung bis zum Netzanschluss war alles perfekt. Der Solarplan war in Minuten fertig!"', author: 'Markus W.', city: 'Düsseldorf' },
+  { text: '"In weniger als einer Woche war die Anlage in Betrieb. Endlich unabhängig vom Stromnetz."', author: 'Stefan K.', city: 'Neuss' },
 ]
 
-const perfStats = [
-  { value: '99%',    label: 'Wirkungsgrad',  icon: 'bolt',     color: '#f5b040' },
-  { value: '2.400€', label: 'Ersparnis/Jahr', icon: 'savings',  color: '#5dca8a' },
-  { value: '25 J.',  label: 'Garantie',       icon: 'verified', color: '#4a9eff' },
-]
+// Curve data — Solarertrag
+const CURVE_DATA    = [210, 380, 520, 610, 640, 580, 490, 370, 250, 190, 160, 200]
+const CURVE_LABELS  = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez']
+const CURVE_YRANGE: [number, number] = [100, 700]
 
-type ChartDef = {
-  type: 'curve' | 'bars' | 'degradation'
-  data: number[]
-  labels: string[]
-  yRange: [number, number]
-  formatTip: (v: number, l: string) => string
-  guaranteeLine?: number
+// Bar data — Ersparnis
+const BAR_DATA   = [720, 1080, 1680, 2220, 2520, 2400, 2160, 1920, 1440, 1020, 660, 780]
+const BAR_LABELS = ['J','F','M','A','M','J','J','A','S','O','N','D']
+const BAR_YRANGE: [number, number] = [0, 3000]
+
+// SVG viewport
+const VW = 300, VH = 90
+const padL = 4, padR = 4, padT = 12, padB = 8
+
+function buildCurve(data: number[], yRange: [number, number]) {
+  const toY = (v: number) => VH - padB - ((v - yRange[0]) / (yRange[1] - yRange[0])) * (VH - padT - padB)
+  const toX = (i: number) => padL + (i / (data.length - 1)) * (VW - padL - padR)
+  const pts = data.map((v, i) => ({ x: toX(i), y: toY(v), v }))
+  const line = pts.reduce((acc, pt, i) => {
+    if (i === 0) return `M${pt.x},${pt.y}`
+    const prev = pts[i - 1]
+    const cpx = (prev.x + pt.x) / 2
+    return `${acc} C${cpx},${prev.y} ${cpx},${pt.y} ${pt.x},${pt.y}`
+  }, '')
+  const area = `${line} L${pts[pts.length-1].x},${VH} L${pts[0].x},${VH} Z`
+  return { pts, line, area }
 }
 
-// Realistic chart data per stat
-const PERF_CHARTS: ChartDef[] = [
-  {
-    // Monthly solar yield (% of annual peak, Germany average)
-    type: 'curve',
-    data: [17, 27, 50, 73, 93, 100, 99, 90, 67, 43, 20, 13],
-    labels: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
-    yRange: [0, 112],
-    formatTip: (v, l) => `${l}: ${v}%`,
-  },
-  {
-    // Monthly savings in € (10kWp system, 0.30€/kWh)
-    type: 'bars',
-    data: [75, 120, 225, 330, 420, 465, 450, 405, 300, 195, 90, 60],
-    labels: ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
-    yRange: [0, 510],
-    formatTip: (v, l) => `${l}: ${v} €`,
-  },
-  {
-    // Panel efficiency degradation over 25 years (−0.8%/yr)
-    type: 'degradation',
-    data: Array.from({ length: 26 }, (_, i) =>
-      Math.round((100 - i * 0.8) * 10) / 10
-    ),
-    labels: Array.from({ length: 26 }, (_, i) => `${i}`),
-    yRange: [74, 104],
-    formatTip: (v, l) => `Jahr ${l}: ${v}%`,
-    guaranteeLine: 80,
-  },
-]
+function buildBars(data: number[], yRange: [number, number]) {
+  const barW   = (VW - padL - padR) / (data.length * 1.55)
+  const barStep = (VW - padL - padR - barW) / (data.length - 1)
+  return data.map((v, i) => {
+    const bh = ((v - yRange[0]) / (yRange[1] - yRange[0])) * (VH - padT - padB)
+    return { x: padL + i * barStep, y: VH - padB - bh, h: bh, w: barW, v }
+  })
+}
+
+// ── Cards ────────────────────────────────────────────────────────────────────
 
 function ProductSlider() {
   const [current, setCurrent] = useState(0)
+  const [expanded, setExpanded] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-
-  const goto = (idx: number) => setCurrent(idx)
+  const cardRef2 = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrent((c) => (c + 1) % products.length)
-    }, 6000)
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+    const el = cardRef2.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        intervalRef.current = setInterval(() => setCurrent((c) => (c + 1) % products.length), 6000)
+      } else {
+        if (intervalRef.current) clearInterval(intervalRef.current)
+      }
+    }, { threshold: 0.2 })
+    obs.observe(el)
+    return () => { obs.disconnect(); if (intervalRef.current) clearInterval(intervalRef.current) }
   }, [])
 
+  const p = products[current]
+
   return (
-    <div className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-8 flex flex-col h-full min-h-[480px] relative overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <span
-          className="text-[10px] font-bold uppercase tracking-[0.25em]"
-          style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.55)' }}
-        >
+    <div
+      ref={cardRef2}
+      className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-6 flex flex-col h-full"
+      onMouseEnter={() => setExpanded(true)}
+      onMouseLeave={() => setExpanded(false)}
+      onClick={() => setExpanded((e) => !e)}
+      style={{ cursor: 'default', minHeight: '240px' }}
+    >
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-[10px] font-bold uppercase tracking-[0.25em]"
+          style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(26,26,26,0.5)' }}>
           Produkte
         </span>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <span className="material-symbols-outlined text-sm" style={{ color: '#f5b040' }}>
-            arrow_forward_ios
-          </span>
-        </div>
+        <motion.span className="material-symbols-outlined text-sm" style={{ color: '#f5b040' }}
+          animate={{ rotate: expanded ? 90 : 0 }} transition={{ duration: 0.3, ease: [0.16,1,0.3,1] }}>
+          chevron_right
+        </motion.span>
       </div>
 
-      {/* Slides */}
-      <div className="flex-1 relative">
+      <div className="flex-1">
         <AnimatePresence mode="wait">
-          {products.map((p, i) =>
-            i === current ? (
-              <motion.div
-                key={p.title}
-                className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {/* Big icon background */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-[0.07]">
-                  <span className="material-symbols-outlined text-[130px] text-white icon-filled">
-                    {p.icon}
-                  </span>
-                </div>
+          <motion.div key={p.title}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease: [0.16,1,0.3,1] }}>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest mb-3"
+              style={{ fontFamily: 'Space Grotesk', color: '#f5b040', background: 'rgba(245,176,64,0.07)', border: '1px solid rgba(245,176,64,0.15)' }}>
+              <span className="material-symbols-outlined text-xs">{p.tagIcon}</span>
+              {p.tag}
+            </span>
+            <h3 className="leading-tight"
+              style={{ color: '#1a1a1a', fontFamily: 'DM Sans', fontWeight: 700, fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', letterSpacing: '-0.03em' }}>
+              {p.title}
+            </h3>
+            <p className="text-xs font-bold mt-1.5" style={{ color: '#f5b040', fontFamily: 'DM Mono' }}>
+              {p.subtitle}
+            </p>
 
-                <div className="relative z-10">
-                  <span
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-5"
-                    style={{
-                      fontFamily: 'Space Grotesk, sans-serif',
-                      color: '#f5b040',
-                      background: 'rgba(255,255,255,0.07)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                    }}
-                  >
-                    <span className="material-symbols-outlined text-xs">{p.tagIcon}</span>
-                    {p.tag}
-                  </span>
-
-                  <h3
-                    className="text-white leading-tight mb-1"
-                    style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 700, fontSize: 'clamp(1.6rem, 3vw, 2rem)', letterSpacing: '-0.03em' }}
-                  >
-                    {p.title}
-                  </h3>
-                  <p
-                    className="text-sm font-bold mb-6"
-                    style={{ color: '#f5b040', fontFamily: 'DM Mono, monospace' }}
-                  >
-                    {p.subtitle}
-                  </p>
-
-                  <div className="space-y-2.5">
+            <AnimatePresence>
+              {expanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.32, ease: [0.16,1,0.3,1] }} style={{ overflow: 'hidden' }}>
+                  <div className="space-y-2 mt-4">
                     {p.features.map((f) => (
-                      <div key={f} className="flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-sm icon-filled" style={{ color: '#f5b040' }}>
-                          check_circle
-                        </span>
-                        <span className="text-sm font-medium" style={{ color: 'rgba(229,226,225,0.8)' }}>
-                          {f}
-                        </span>
+                      <div key={f} className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm icon-filled" style={{ color: '#f5b040' }}>check_circle</span>
+                        <span className="text-xs" style={{ color: 'rgba(26,26,26,0.75)', fontFamily: 'DM Sans' }}>{f}</span>
                       </div>
                     ))}
                   </div>
-
-                  <button
-                    onClick={() => document.getElementById('loesungen')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="inline-flex items-center gap-2 mt-8 text-[10px] font-bold uppercase tracking-[0.2em] hover:underline"
-                    style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040', background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    Details ansehen
-                    <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                  </button>
-                </div>
-              </motion.div>
-            ) : null
-          )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Dots */}
-      <div className="flex gap-2 justify-center mt-8">
-        {products.map((p, i) => (
-          <button
-            key={p.title}
-            onClick={() => goto(i)}
-            className={`slider-dot ${i === current ? 'dot-active' : 'dot-inactive'}`}
-          />
+      <div className="flex gap-2 mt-5">
+        {products.map((_, i) => (
+          <button key={i} onClick={(e) => { e.stopPropagation(); setCurrent(i) }}
+            className={`slider-dot ${i === current ? 'dot-active' : 'dot-inactive'}`} />
         ))}
       </div>
     </div>
@@ -203,555 +158,372 @@ function ProductSlider() {
 
 function ReviewCard() {
   const [current, setCurrent] = useState(0)
+  const reviewRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const id = setInterval(() => setCurrent((c) => (c + 1) % reviews.length), 5000)
-    return () => clearInterval(id)
+    const el = reviewRef.current; if (!el) return
+    let id: ReturnType<typeof setInterval>
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        id = setInterval(() => setCurrent((c) => (c + 1) % reviews.length), 5000)
+      } else {
+        clearInterval(id)
+      }
+    }, { threshold: 0.2 })
+    obs.observe(el)
+    return () => { obs.disconnect(); clearInterval(id) }
   }, [])
 
   return (
-    <div className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-6 flex flex-col justify-between min-h-[220px] relative overflow-hidden">
+    <div ref={reviewRef} className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-5 flex flex-col h-full">
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
-          >
-            <span className="material-symbols-outlined text-lg" style={{ color: '#f5b040' }}>
-              account_circle
-            </span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(245,176,64,0.06)', border: '1px solid rgba(245,176,64,0.13)' }}>
+            <span className="material-symbols-outlined text-base" style={{ color: '#f5b040' }}>account_circle</span>
           </div>
-          <span
-            className="text-[9px] font-bold uppercase tracking-[0.25em]"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(209,197,176,0.6)' }}
-          >
-            Kundenerfahrungen
-          </span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.25em]"
+            style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.6)' }}>Kundenerfahrungen</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span
-            className="font-black text-white text-lg"
-            style={{ fontFamily: 'DM Mono, monospace' }}
-          >
-            4.8
-          </span>
-          <span className="material-symbols-outlined icon-filled star-glow text-lg" style={{ color: '#F5C518' }}>
-            star
-          </span>
+        <div className="flex items-center gap-1">
+          <span className="font-black text-base" style={{ color: '#1a1a1a', fontFamily: 'DM Mono' }}>4.8</span>
+          <span className="material-symbols-outlined icon-filled star-glow text-base" style={{ color: '#f5b040' }}>star</span>
         </div>
       </div>
 
-      <div className="relative overflow-hidden" style={{ minHeight: '80px' }}>
+      {/* Review text — centered vertically */}
+      <div className="flex-1 flex items-center overflow-hidden" style={{ position: 'relative', minHeight: '56px' }}>
         <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <p className="text-sm italic leading-relaxed font-medium text-white">
+          <motion.div key={current}
+            style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.45, ease: [0.16,1,0.3,1] }}>
+            <p style={{ fontFamily: 'DM Sans, sans-serif', fontWeight: 500, fontSize: 'clamp(1rem, 1.8vw, 1.25rem)', color: '#1a1a1a', lineHeight: 1.55, letterSpacing: '-0.02em' }}>
               {reviews[current].text}
             </p>
-            <p
-              className="text-[10px] font-bold uppercase tracking-widest mt-3"
-              style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040' }}
-            >
+            <p className="text-xs font-bold uppercase tracking-widest mt-3"
+              style={{ fontFamily: 'Space Grotesk', color: '#f5b040' }}>
               — {reviews[current].author}, {reviews[current].city}
             </p>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <button
-        onClick={() => document.getElementById('feedback')?.scrollIntoView({ behavior: 'smooth' })}
-        className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest mt-4 hover:opacity-70 transition-opacity"
-        style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-      >
-        Bewertungen lesen
-        <span className="material-symbols-outlined text-xs">open_in_new</span>
-      </button>
+      {/* Footer */}
+      <div className="flex items-center justify-between mt-4 pt-3"
+        style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <button onClick={() => document.getElementById('feedback')?.scrollIntoView({ behavior: 'smooth' })}
+          className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest hover:opacity-70 transition-opacity"
+          style={{ fontFamily: 'Space Grotesk', color: '#f5b040', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          Bewertungen lesen
+          <span className="material-symbols-outlined text-xs">open_in_new</span>
+        </button>
+        {/* Dot indicators */}
+        <div className="flex gap-1.5">
+          {reviews.map((_, i) => (
+            <button key={i} onClick={() => setCurrent(i)}
+              className="w-1.5 h-1.5 rounded-full transition-all"
+              style={{
+                background: i === current ? '#f5b040' : 'rgba(0,0,0,0.12)',
+                width: i === current ? '16px' : '6px',
+                transition: 'all 0.3s ease',
+                border: 'none', cursor: 'pointer', padding: 0,
+              }} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
 
-function PerformanceCard() {
-  const [active, setActive] = useState(0)
+function SolarertragCard() {
   const [entered, setEntered] = useState(false)
   const [mouseX, setMouseX] = useState<number | null>(null)
-  const [hoveredBar, setHoveredBar] = useState<number | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
-  const svgRef = useRef<SVGSVGElement>(null)
+  const svgRef  = useRef<SVGSVGElement>(null)
+  const col = '#f5b040'
 
-  const VW = 300, VH = 90
-  const padL = 4, padR = 4, padT = 12, padB = 8
+  const { pts, line, area } = useMemo(() => buildCurve(CURVE_DATA, CURVE_YRANGE), [])
 
-  const chart = PERF_CHARTS[active]
-  const col = perfStats[active].color
-
-  // Memoize expensive chart calculations — only recompute when active tab changes
-  const { pts, linePath, areaPath, barW, barStep } = useMemo(() => {
-    const toY = (v: number) => {
-      const [yMin, yMax] = chart.yRange
-      return VH - padB - ((v - yMin) / (yMax - yMin)) * (VH - padT - padB)
-    }
-    const toX = (i: number, total: number) =>
-      padL + (i / (total - 1)) * (VW - padL - padR)
-
-    const pts = chart.data.map((v, i) => ({
-      x: toX(i, chart.data.length),
-      y: toY(v),
-      v,
-      label: chart.labels[i],
-    }))
-
-    const linePath = pts.reduce((acc, pt, i) => {
-      if (i === 0) return `M${pt.x},${pt.y}`
-      const prev = pts[i - 1]
-      const cpx = (prev.x + pt.x) / 2
-      return `${acc} C${cpx},${prev.y} ${cpx},${pt.y} ${pt.x},${pt.y}`
-    }, '')
-    const areaPath = `${linePath} L${pts[pts.length-1].x},${VH} L${pts[0].x},${VH} Z`
-
-    const totalBars = chart.data.length
-    const barW = (VW - padL - padR) / (totalBars * 1.55)
-    const barStep = (VW - padL - padR - barW) / (totalBars - 1)
-
-    return { pts, linePath, areaPath, barW, barStep }
-  }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const hoveredPt = mouseX !== null && chart.type === 'curve'
+  const hoveredPt = mouseX !== null
     ? pts.reduce((c, p) => Math.abs(p.x - mouseX) < Math.abs(c.x - mouseX) ? p : c)
     : null
 
   useEffect(() => {
-    const el = cardRef.current
-    if (!el) return
+    const el = cardRef.current; if (!el) return
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setEntered(true) }, { threshold: 0.3 })
-    obs.observe(el)
-    return () => obs.disconnect()
+    obs.observe(el); return () => obs.disconnect()
   }, [])
 
-  useEffect(() => { setMouseX(null); setHoveredBar(null) }, [active])
-
-  const handleSvgMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
-    const r = svgRef.current?.getBoundingClientRect()
-    if (!r) return
+  const onMove = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
+    const r = svgRef.current?.getBoundingClientRect(); if (!r) return
     setMouseX(Math.max(padL, Math.min(VW - padR, ((e.clientX - r.left) / r.width) * VW)))
   }, [])
 
-  const tooltipPt = hoveredPt ?? (hoveredBar !== null ? pts[hoveredBar] : null)
-
   return (
-    <div
-      ref={cardRef}
-      id="performance"
-      className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-5 relative overflow-hidden flex flex-col gap-2"
-      style={{ minHeight: '220px' }}
-    >
-      {/* Header */}
+    <div ref={cardRef} className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-5 flex flex-col gap-2 h-full" style={{ minHeight: '280px' }}>
       <div className="flex items-center justify-between">
         <span className="text-[9px] font-bold uppercase tracking-[0.25em]"
-          style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.45)' }}>
-          Performance
-        </span>
+          style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.5)' }}>Solarertrag</span>
         <div className="flex items-center gap-1.5">
-          <motion.div className="w-1.5 h-1.5 rounded-full" style={{ background: '#4ade80' }}
+          <motion.div className="w-1.5 h-1.5 rounded-full" style={{ background: col }}
             animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 2, repeat: Infinity }} />
-          <span className="text-[8px] font-bold uppercase tracking-widest"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#4ade80' }}>Live</span>
+          <span className="text-[8px] font-bold uppercase tracking-widest" style={{ fontFamily: 'Space Grotesk', color: col }}>Live</span>
         </div>
       </div>
 
-      {/* Value */}
-      <AnimatePresence mode="wait">
-        <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: [0.16,1,0.3,1] }}
-          className="flex items-baseline gap-2">
-          <span style={{ fontFamily: 'DM Sans', fontSize: 'clamp(1.5rem,3vw,1.9rem)', fontWeight: 900, letterSpacing: '-0.04em', color: col, lineHeight: 1 }}>
-            {perfStats[active].value}
-          </span>
-          <span style={{ fontFamily: 'Space Grotesk', color: 'rgba(255,255,255,0.35)', fontSize: '11px', fontWeight: 700 }}>
-            {perfStats[active].label}
-          </span>
-        </motion.div>
-      </AnimatePresence>
+      <div className="flex items-baseline gap-1.5">
+        <span style={{ fontFamily: 'DM Sans', fontSize: 'clamp(1.4rem,3vw,1.8rem)', fontWeight: 900, letterSpacing: '-0.04em', color: col, lineHeight: 1 }}>
+          5.200 kWh
+        </span>
+        <span style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.4)', fontSize: '10px', fontWeight: 700 }}>/ Jahr</span>
+      </div>
 
-      {/* Chart */}
-      <div className="flex-1 relative" style={{ minHeight: '72px' }}>
-        <AnimatePresence mode="wait">
-          <motion.svg key={active} ref={svgRef}
-            viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="none"
-            className="w-full h-full cursor-crosshair"
-            onMouseMove={handleSvgMove}
-            onMouseLeave={() => { setMouseX(null); setHoveredBar(null) }}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
-          >
-            <defs>
-              <linearGradient id={`c-fill-${active}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={col} stopOpacity="0.25" />
-                <stop offset="100%" stopColor={col} stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id={`c-line-${active}`} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor={col} stopOpacity="0.1" />
-                <stop offset="40%" stopColor={col} stopOpacity="1" />
-                <stop offset="100%" stopColor={col} stopOpacity="0.65" />
-              </linearGradient>
-              <linearGradient id={`c-bar-${active}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={col} stopOpacity="0.9" />
-                <stop offset="100%" stopColor={col} stopOpacity="0.3" />
-              </linearGradient>
-              <filter id="c-glow">
-                <feGaussianBlur stdDeviation="1.3" result="b" />
-                <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-            </defs>
-
-            {/* ── CURVE: monthly yield ── */}
-            {chart.type === 'curve' && entered && <>
-              <path d={areaPath} fill={`url(#c-fill-${active})`} />
-              <motion.path d={linePath} fill="none" stroke={`url(#c-line-${active})`}
-                strokeWidth="1.5" strokeLinecap="round" filter="url(#c-glow)"
-                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                transition={{ duration: 1.7, ease: [0.16,1,0.3,1] }} />
-              {/* Pulsing end dot */}
-              <motion.circle cx={pts[pts.length-1].x} cy={pts[pts.length-1].y} r="5"
-                fill={col} fillOpacity="0.15"
-                animate={{ r:[4,8,4], fillOpacity:[0.15,0,0.15] }}
-                transition={{ delay: 1.8, duration: 2.4, repeat: Infinity }} />
-              <motion.circle cx={pts[pts.length-1].x} cy={pts[pts.length-1].y} r="2.5"
-                fill={col} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }} />
-            </>}
-
-            {/* ── BARS: monthly savings ── */}
-            {chart.type === 'bars' && entered && chart.data.map((v, i) => {
-              const bx = padL + i * barStep
-              const bh = ((v - chart.yRange[0]) / (chart.yRange[1] - chart.yRange[0])) * (VH - padT - padB)
-              const by = VH - padB - bh
-              const isH = hoveredBar === i
-              return (
-                <motion.rect key={chart.labels[i]} x={bx} width={barW} rx={2.5}
-                  initial={{ y: VH - padB, height: 0 }}
-                  animate={{ y: by, height: bh }}
-                  transition={{ delay: i * 0.04, duration: 0.55, ease: [0.16,1,0.3,1] }}
-                  fill={isH ? col : `url(#c-bar-${active})`}
-                  fillOpacity={isH ? 1 : 0.55}
-                  onMouseEnter={() => setHoveredBar(i)}
-                  style={{ cursor: 'pointer' }}
-                />
-              )
-            })}
-
-            {/* ── 25-YEAR CELL GRID ── */}
-            {chart.type === 'degradation' && (() => {
-              const COLS = 5, ROWS = 5
-              const gap = 5
-              const cW2 = (VW - padL - padR - (COLS - 1) * gap) / COLS
-              const cH2 = (VH - padT - 12 - (ROWS - 1) * gap) / ROWS
-              // color by warranty count
-              const cellCol = (yr: number) =>
-                yr <= 5 ? '#c084fc' : yr <= 10 ? '#4a9eff' : '#f5b040'
-              const cellBaseOp = (yr: number) =>
-                yr <= 5 ? 0.75 : yr <= 10 ? 0.55 : 0.32
-
-              return <>
-                {Array.from({ length: 25 }, (_, idx) => {
-                  const yr = idx + 1
-                  const c = idx % COLS
-                  const r = Math.floor(idx / COLS)
-                  const x = padL + c * (cW2 + gap)
-                  const y = padT + r * (cH2 + gap)
-                  const isH = hoveredBar === idx
-                  const cc = cellCol(yr)
-                  return (
-                    <g key={yr}
-                      onMouseEnter={() => setHoveredBar(idx)}
-                      onMouseLeave={() => setHoveredBar(null)}
-                      style={{ cursor: 'default' }}
-                    >
-                      {/* Glow ring when hovered */}
-                      {isH && (
-                        <rect x={x - 1.5} y={y - 1.5} width={cW2 + 3} height={cH2 + 3} rx={4}
-                          fill="none" stroke={cc} strokeWidth="1.5" strokeOpacity="0.9"
-                          style={{ filter: `drop-shadow(0 0 6px ${cc})` }}
-                        />
-                      )}
-                      {/* Cell */}
-                      <motion.rect
-                        x={x} y={y} width={cW2} height={cH2} rx={2.5}
-                        fill={cc}
-                        initial={{ opacity: 0, scale: 0.4 }}
-                        animate={{ opacity: isH ? 1 : cellBaseOp(yr), scale: 1 }}
-                        transition={{
-                          opacity: { duration: isH ? 0.1 : 0.35, delay: entered ? 0 : idx * 0.018 },
-                          scale: { delay: idx * 0.018, duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-                        }}
-                      />
-                      {/* Year label for col 4 (J5, J10, J15, J20, J25) */}
-                      {c === 4 && (
-                        <text x={x + cW2 / 2} y={y + cH2 / 2 + 0.5} textAnchor="middle" dominantBaseline="middle"
-                          style={{ fontSize: '6px', fontFamily: 'DM Mono', fontWeight: 700, fill: isH ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.45)', pointerEvents: 'none' }}>
-                          J{yr}
-                        </text>
-                      )}
-                    </g>
-                  )
-                })}
-
-                {/* Legend row */}
-                {[
-                  { label: 'J1–J5 · Vollschutz',    color: '#c084fc' },
-                  { label: 'J6–J10 · Erweitert',   color: '#4a9eff' },
-                  { label: 'J11–J25 · Modul',       color: '#f5b040' },
-                ].map((leg, i) => (
-                  <g key={leg.label}>
-                    <circle cx={padL + i * 95 + 4} cy={VH - 4} r={2.5} fill={leg.color} fillOpacity={0.75} />
-                    <text x={padL + i * 95 + 10} y={VH - 1} dominantBaseline="middle"
-                      style={{ fontSize: '6px', fontFamily: 'Space Grotesk', fontWeight: 700, fill: 'rgba(255,255,255,0.28)' }}>
-                      {leg.label}
-                    </text>
-                  </g>
-                ))}
-              </>
-            })()}
-
-            {/* ── SHARED crosshair (curve + degradation) ── */}
-            {hoveredPt && <>
-              <line x1={hoveredPt.x} y1={padT} x2={hoveredPt.x} y2={VH-padB}
-                stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 4" />
-              <circle cx={hoveredPt.x} cy={hoveredPt.y} r="5" fill={col} fillOpacity="0.15" />
-              <circle cx={hoveredPt.x} cy={hoveredPt.y} r="2.5" fill={col} />
-            </>}
-          </motion.svg>
-        </AnimatePresence>
-
-        {/* Tooltip — curve & bars */}
-        {active !== 2 && tooltipPt && (
+      <div className="flex-1 relative" style={{ minHeight: '100px' }}>
+        <svg ref={svgRef} viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="xMidYMid meet"
+          style={{ width: '100%', height: '100%', cursor: 'crosshair', display: 'block' }}
+          onMouseMove={onMove} onMouseLeave={() => setMouseX(null)}>
+          <defs>
+            <linearGradient id="se-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={col} stopOpacity="0.14" />
+              <stop offset="80%" stopColor={col} stopOpacity="0.02" />
+              <stop offset="100%" stopColor={col} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {entered && <>
+            <path d={area} fill="url(#se-fill)" />
+            <motion.path d={line} fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeOpacity="0.9"
+              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+              transition={{ duration: 1.7, ease: [0.16,1,0.3,1] }} />
+            <motion.circle cx={pts[pts.length-1].x} cy={pts[pts.length-1].y} r="6"
+              fill={col} fillOpacity="0.18"
+              animate={{ r:[5,10,5], fillOpacity:[0.18,0,0.18] }} transition={{ delay: 1.8, duration: 2.4, repeat: Infinity }} />
+            <motion.circle cx={pts[pts.length-1].x} cy={pts[pts.length-1].y} r="3.5"
+              fill={col} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }} />
+          </>}
+          {hoveredPt && <>
+            <line x1={hoveredPt.x} y1={padT} x2={hoveredPt.x} y2={VH-padB}
+              stroke="rgba(0,0,0,0.12)" strokeWidth="1" strokeDasharray="3 4" />
+            <circle cx={hoveredPt.x} cy={hoveredPt.y} r="6" fill={col} fillOpacity="0.15" />
+            <circle cx={hoveredPt.x} cy={hoveredPt.y} r="3.5" fill={col} />
+          </>}
+        </svg>
+        {hoveredPt && (
           <div className="absolute top-0 px-2 py-1 rounded-lg pointer-events-none"
-            style={{
-              left: `clamp(0px, calc(${(tooltipPt.x / VW) * 100}% - 30px), calc(100% - 76px))`,
-              background: 'rgba(12,12,12,0.93)',
-              border: `1px solid ${col}38`,
-              backdropFilter: 'blur(8px)',
-              fontFamily: 'DM Mono, monospace',
-              fontSize: '10px', fontWeight: 700, color: col,
-              whiteSpace: 'nowrap',
-            }}>
-            {chart.formatTip(tooltipPt.v, tooltipPt.label)}
+            style={{ left: `clamp(0px, calc(${(hoveredPt.x / VW) * 100}% - 30px), calc(100% - 80px))`, background: 'rgba(255,255,255,0.95)', border: `1px solid ${col}38`, backdropFilter: 'blur(8px)', fontFamily: 'DM Mono', fontSize: '10px', fontWeight: 700, color: col, whiteSpace: 'nowrap' }}>
+            {CURVE_LABELS[pts.indexOf(hoveredPt)]} · {hoveredPt.v} kWh
           </div>
         )}
-        {/* Tooltip — warranty timeline */}
-        {active === 2 && mouseX !== null && (() => {
-          const cW = VW - padL - padR
-          const yr = Math.round(Math.min(25, Math.max(0, (mouseX - padL) / cW * 25)))
-          return (
-            <div className="absolute top-0 px-2 py-1 rounded-lg pointer-events-none"
-              style={{
-                left: `clamp(0px, calc(${(mouseX / VW) * 100}% - 32px), calc(100% - 96px))`,
-                background: 'rgba(12,12,12,0.93)',
-                border: `1px solid ${col}38`,
-                backdropFilter: 'blur(8px)',
-                fontFamily: 'DM Mono, monospace',
-                fontSize: '10px', fontWeight: 700, color: col,
-                whiteSpace: 'nowrap',
-              }}>
-              Jahr {yr} · abgesichert
-            </div>
-          )
-        })()}
-      </div>
-
-      {/* Stat pills */}
-      <div className="flex gap-1.5 flex-wrap">
-        {perfStats.map((s, i) => (
-          <button key={s.label} onClick={() => setActive(i)}
-            className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold"
-            style={{
-              fontFamily: 'Space Grotesk, sans-serif',
-              background: active === i ? `${s.color}15` : 'rgba(255,255,255,0.04)',
-              border: active === i ? `1px solid ${s.color}35` : '1px solid rgba(255,255,255,0.07)',
-              color: active === i ? s.color : 'rgba(255,255,255,0.35)',
-              cursor: 'pointer', outline: 'none',
-              transition: 'all 0.2s ease',
-            }}>
-            <span className="material-symbols-outlined icon-filled" style={{ fontSize: '11px' }}>{s.icon}</span>
-            {s.label}
-          </button>
-        ))}
       </div>
     </div>
   )
 }
 
-function FeatureCard({ onAngebot }: { onAngebot: () => void }) {
+function ErsparnisChard() {
+  const [entered, setEntered] = useState(false)
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const col = '#4ade80'
+
+  const bars = useMemo(() => buildBars(BAR_DATA, BAR_YRANGE), [])
+
+  useEffect(() => {
+    const el = cardRef.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setEntered(true) }, { threshold: 0.3 })
+    obs.observe(el); return () => obs.disconnect()
+  }, [])
+
   return (
-    <div
-      id="speicher"
-      className="feature-card rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center gap-10 md:gap-14"
-    >
-      <div className="flex-1 text-center md:text-left">
+    <div ref={cardRef} className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-5 flex flex-col gap-2 h-full" style={{ minHeight: '280px' }}>
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] font-bold uppercase tracking-[0.25em]"
+          style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.5)' }}>Ø Ersparnis</span>
+        <span className="material-symbols-outlined icon-filled text-sm" style={{ color: col }}>savings</span>
+      </div>
+
+      <div className="flex items-baseline gap-1.5">
+        <span style={{ fontFamily: 'DM Sans', fontSize: 'clamp(1.4rem,3vw,1.8rem)', fontWeight: 900, letterSpacing: '-0.04em', color: col, lineHeight: 1 }}>
+          1.800 €
+        </span>
+        <span style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.4)', fontSize: '10px', fontWeight: 700 }}>/ Jahr</span>
+      </div>
+
+      <div className="flex-1 relative" style={{ minHeight: '100px' }}>
+        <svg viewBox={`0 0 ${VW} ${VH}`} preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+          <defs>
+            <linearGradient id="sp-bar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={col} stopOpacity="0.9" />
+              <stop offset="100%" stopColor={col} stopOpacity="0.3" />
+            </linearGradient>
+          </defs>
+          {entered && bars.map((b, i) => (
+            <motion.rect key={BAR_LABELS[i]} x={b.x} width={b.w} rx={2.5}
+              initial={{ y: VH - padB, height: 0 }}
+              animate={{ y: b.y, height: b.h }}
+              transition={{ delay: i * 0.04, duration: 0.55, ease: [0.16,1,0.3,1] }}
+              fill={hoveredIdx === i ? col : 'url(#sp-bar)'}
+              fillOpacity={hoveredIdx === i ? 1 : 0.6}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              style={{ cursor: 'pointer' }}
+            />
+          ))}
+        </svg>
+        {hoveredIdx !== null && (
+          <div className="absolute top-0 px-2 py-1 rounded-lg pointer-events-none"
+            style={{ left: `clamp(0px, calc(${(bars[hoveredIdx].x / VW) * 100}% - 20px), calc(100% - 60px))`, background: 'rgba(255,255,255,0.95)', border: `1px solid ${col}38`, backdropFilter: 'blur(8px)', fontFamily: 'DM Mono', fontSize: '10px', fontWeight: 700, color: col, whiteSpace: 'nowrap' }}>
+            {BAR_LABELS[hoveredIdx]} · {BAR_DATA[hoveredIdx].toLocaleString('de-DE')} €
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function GarantieCard() {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const hasRun = useRef(false)
+  const col = '#c084fc'
+
+  useEffect(() => {
+    const el = ref.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !hasRun.current) {
+        hasRun.current = true
+        const dur = 1200, start = performance.now()
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / dur, 1)
+          setCount(Math.round((1 - Math.pow(1 - p, 3)) * 25))
+          if (p < 1) requestAnimationFrame(tick)
+          else setCount(25)
+        }
+        requestAnimationFrame(tick)
+      }
+    }, { threshold: 0.4 })
+    obs.observe(el); return () => obs.disconnect()
+  }, [])
+
+  return (
+    <div ref={ref} className="glow-card liquid-glass liquid-glass-hover rounded-3xl p-5 flex flex-col gap-2 h-full relative overflow-hidden" style={{ minHeight: '280px' }}>
+      {/* Ambient glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div style={{ width: '180px', height: '180px', borderRadius: '50%', background: `radial-gradient(circle, ${col}14 0%, transparent 70%)` }} />
+      </div>
+
+      <div className="flex items-center justify-between relative z-10">
+        <span className="text-[9px] font-bold uppercase tracking-[0.25em]"
+          style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.5)' }}>Garantie</span>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10 gap-3">
+        {/* Icon */}
+        <div style={{
+          width: '72px', height: '72px', borderRadius: '50%',
+          background: `${col}12`, border: `1.5px solid ${col}30`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span className="material-symbols-outlined icon-filled" style={{ fontSize: '36px', color: col }}>
+            verified_user
+          </span>
+        </div>
+
+        {/* Count */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontFamily: 'DM Mono, monospace', fontWeight: 900, fontSize: '2.6rem', color: col, letterSpacing: '-0.04em', lineHeight: 1 }}>
+            {count}
+          </div>
+          <div style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: `${col}99`, marginTop: '2px' }}>
+            Jahre Garantie*
+          </div>
+        </div>
+
+        <p className="text-[9px] text-center" style={{ fontFamily: 'Space Grotesk', color: 'rgba(26,26,26,0.4)' }}>
+          * Leistungsgarantie auf Solarmodule
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ── Grid ─────────────────────────────────────────────────────────────────────
+
+export default function BentoGrid({ onAngebot: _onAngebot }: { onAngebot: () => void }) {
+  const cardAnim = (delay = 0) => ({
+    initial: { opacity: 0, y: 40 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const, delay },
+  })
+
+  return (
+    <section id="loesungen" className="relative z-10 max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-16">
+      {/* Section intro */}
+      <motion.div
+        className="mb-10 md:mb-14"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
         <span
-          className="text-[9px] font-bold uppercase tracking-[0.3em]"
+          className="text-[10px] font-bold uppercase tracking-[0.35em]"
           style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040' }}
         >
-          Flaggschiff Produkt
+          Unsere Lösungen
         </span>
-        <h3
-          className="text-white mt-4 leading-tight"
+        <h2
+          className="font-black mt-2 leading-tight"
           style={{
             fontFamily: 'DM Sans, sans-serif',
-            fontWeight: 700,
-            fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+            fontSize: 'clamp(1.8rem, 4vw, 3rem)',
             letterSpacing: '-0.04em',
+            color: '#1a1a1a',
           }}
         >
-          Smart Solar
-          <br />
-          <span
-            style={{
-              fontFamily: 'Instrument Serif, Arial, sans-serif',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              background: 'linear-gradient(135deg, #f5b040 0%, #e07018 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Speicherbatterie
+          Alles aus einer Hand —{' '}
+          <span style={{
+            fontFamily: 'Instrument Serif, Arial, sans-serif',
+            fontStyle: 'italic',
+            fontWeight: 400,
+            background: 'linear-gradient(135deg, #f5b040 0%, #e07018 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            von Modul bis Netz.
           </span>
-        </h3>
+        </h2>
         <p
-          className="mt-5 text-base leading-relaxed"
-          style={{ color: 'rgba(209,197,176,0.8)', lineHeight: 1.7, maxWidth: '36ch' }}
+          className="mt-3 text-sm max-w-lg"
+          style={{ color: 'rgba(26,26,26,0.5)', lineHeight: 1.7, fontFamily: 'DM Sans, sans-serif' }}
         >
-          Kompakt, skalierbar und hocheffizient. Nutzen Sie Ihren Sonnenstrom auch nachts
-          mit unserem preisgekrönten Speichersystem.
+          Premium-Komponenten, direkte Montage, echte Garantien — und Zahlen, die für sich sprechen.
         </p>
+      </motion.div>
 
-        <div className="mt-8 flex flex-wrap gap-4">
-          <motion.button
-            className="cta-pill flex items-center gap-2 rounded-full px-7 py-3.5 font-bold text-xs uppercase tracking-widest border"
-            style={{
-              fontFamily: 'Space Grotesk, sans-serif',
-              color: 'white',
-              background: 'rgba(255,255,255,0.06)',
-              borderColor: 'rgba(255,255,255,0.12)',
-              letterSpacing: '0.15em',
-            }}
-            onClick={() => document.getElementById('speicher')?.scrollIntoView({ behavior: 'smooth' })}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Details ansehen
-          </motion.button>
-          <motion.button
-            className="cta-pill flex items-center gap-2 rounded-full px-7 py-3.5 font-black text-xs uppercase tracking-widest"
-            style={{
-              fontFamily: 'Space Grotesk, sans-serif',
-              background: 'linear-gradient(135deg, #f5b040, #e07018)',
-              color: '#2a1600',
-              letterSpacing: '0.12em',
-            }}
-            onClick={onAngebot}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <span className="material-symbols-outlined icon-filled text-base">wb_sunny</span>
-            Angebot anfragen
-          </motion.button>
-        </div>
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-      {/* Product image */}
-      <div className="flex-1 w-full max-w-xs md:max-w-sm">
-        <motion.div
-          className="relative"
-          whileHover={{ scale: 1.03, rotate: 1 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div
-            className="absolute -inset-2 blur-3xl opacity-0 hover:opacity-40 transition-opacity duration-700 rounded-3xl"
-            style={{ background: 'radial-gradient(circle, #f5b040, #e07018)' }}
-          />
-          <img
-            src={FEATURE_IMG}
-            alt="Smart Solar Speicherbatterie"
-            className="relative w-full h-auto rounded-2xl shadow-2xl"
-            loading="lazy"
-            decoding="async"
-            style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-          />
-          {/* Floating badge */}
-          <motion.div
-            className="absolute -top-3 -right-3 rounded-2xl px-3 py-2"
-            style={{
-              background: 'linear-gradient(135deg, #f5b040, #e07018)',
-              color: '#2a1600',
-            }}
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <div className="text-xs font-black" style={{ fontFamily: 'DM Mono, monospace' }}>
-              16,98 kWh
-            </div>
-            <div className="text-[8px] font-bold uppercase tracking-wider" style={{ fontFamily: 'Space Grotesk' }}>
-              Kapazität
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </div>
-  )
-}
-
-export default function BentoGrid({ onAngebot }: { onAngebot: () => void }) {
-  return (
-    <section id="loesungen" className="relative z-10 max-w-7xl mx-auto px-6 pb-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {/* Product Slider - tall left column */}
-        <motion.div
-          className="lg:row-span-2 reveal"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        >
+        {/* Row 1 */}
+        <motion.div className="reveal" {...cardAnim(0)}>
           <ProductSlider />
         </motion.div>
-
-        {/* Reviews */}
-        <motion.div
-          className="reveal"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        >
+        <motion.div className="md:col-span-2 reveal" {...cardAnim(0.1)}>
           <ReviewCard />
         </motion.div>
 
-        {/* Performance */}
-        <motion.div
-          className="reveal"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-        >
-          <PerformanceCard />
+        {/* Row 2: 3 performance bentos */}
+        <motion.div className="reveal" {...cardAnim(0.0)}>
+          <SolarertragCard />
+        </motion.div>
+        <motion.div className="reveal" {...cardAnim(0.1)}>
+          <ErsparnisChard />
+        </motion.div>
+        <motion.div className="reveal" {...cardAnim(0.2)}>
+          <GarantieCard />
         </motion.div>
 
-        {/* Feature Card - spans 2 cols */}
-        <motion.div
-          className="md:col-span-2 reveal"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-        >
-          <FeatureCard onAngebot={onAngebot} />
-        </motion.div>
       </div>
     </section>
   )

@@ -18,7 +18,7 @@ export default function Footer() {
   return (
     <footer
       className="relative overflow-hidden pb-36 md:pb-0 reveal"
-      style={{ background: '#131313', borderTop: '1px solid rgba(255,255,255,0.05)' }}
+      style={{ background: '#f8f7f5', borderTop: '1px solid rgba(0,0,0,0.07)' }}
     >
       <div className="max-w-7xl mx-auto px-6 py-16 flex flex-col md:flex-row justify-between items-center gap-10">
         {/* Brand */}
@@ -38,7 +38,7 @@ export default function Footer() {
               style={{
                 fontFamily: 'DM Sans, sans-serif',
                 letterSpacing: '-0.05em',
-                color: 'rgba(255,255,255,0.6)',
+                color: 'rgba(26,26,26,0.6)',
               }}
             >
               STN Solar
@@ -46,9 +46,9 @@ export default function Footer() {
           </motion.div>
           <p
             className="text-[9px] font-bold uppercase tracking-widest text-center md:text-left"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.25)' }}
+            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(26,26,26,0.4)' }}
           >
-            © {new Date().getFullYear()} STN Solar. Deutsche Ingenieurskunst.
+            © {new Date().getFullYear()} STN Solar · Neuss, NRW · Seit 2018
           </p>
 
           {/* Social icons */}
@@ -60,13 +60,13 @@ export default function Footer() {
                 aria-label={s.label}
                 className="w-9 h-9 rounded-full flex items-center justify-center"
                 style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(0,0,0,0.04)',
+                  border: '1px solid rgba(0,0,0,0.08)',
                 }}
-                whileHover={{ scale: 1.1, borderColor: 'rgba(255,255,255,0.2)' }}
+                whileHover={{ scale: 1.1, borderColor: 'rgba(245,176,64,0.4)' }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="material-symbols-outlined text-base" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <span className="material-symbols-outlined text-base" style={{ color: 'rgba(26,26,26,0.5)' }}>
                   {s.icon}
                 </span>
               </motion.a>
@@ -81,7 +81,7 @@ export default function Footer() {
               key={link.label}
               to={link.to}
               className="text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-200"
-              style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.35)' }}
+              style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(26,26,26,0.5)' }}
             >
               {link.label}
             </Link>
@@ -92,13 +92,13 @@ export default function Footer() {
         <div className="text-center md:text-right">
           <p
             className="text-xs font-bold"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.25)' }}
+            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(26,26,26,0.4)' }}
           >
             Made with ☀ in Deutschland
           </p>
           <p
             className="text-[9px] uppercase tracking-widest mt-1"
-            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(255,255,255,0.15)' }}
+            style={{ fontFamily: 'Space Grotesk, sans-serif', color: 'rgba(26,26,26,0.3)' }}
           >
             Energie. Heute. Morgen.
           </p>

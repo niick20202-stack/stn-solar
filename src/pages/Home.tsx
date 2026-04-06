@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import Lenis from 'lenis'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
+import LogoStrip from '../components/LogoStrip'
 import BentoGrid from '../components/BentoGrid'
 import ComparisonSection from '../components/ComparisonSection'
 import CursorGlow from '../components/CursorGlow'
@@ -13,7 +14,6 @@ import FloatingContact from '../components/FloatingContact'
 const Process = lazy(() => import('../components/Process'))
 const Services = lazy(() => import('../components/Services'))
 const Speicher = lazy(() => import('../components/Speicher'))
-const Foerderung = lazy(() => import('../components/Foerderung'))
 const Stats = lazy(() => import('../components/Stats'))
 const FAQ = lazy(() => import('../components/FAQ'))
 const Footer = lazy(() => import('../components/Footer'))
@@ -65,14 +65,14 @@ export default function Home() {
           if (entry.isIntersecting) entry.target.classList.add('active')
         })
       },
-      { threshold: 0.08, rootMargin: '0px 0px -60px 0px' }
+      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
     )
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 
   return (
-    <div className="grain relative min-h-screen" style={{ backgroundColor: '#131313' }}>
+    <div className="grain relative min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <CursorGlow />
       <ReonicModal open={modalOpen} onClose={() => setModalOpen(false)} />
       <Navbar onAngebot={openModal} />
@@ -80,17 +80,19 @@ export default function Home() {
       <FloatingContact />
       <main className="relative z-10 pb-36 md:pb-0">
         <Hero onAngebot={openModal} />
+        <LogoStrip />
         <BentoGrid onAngebot={openModal} />
-        <ComparisonSection onAngebot={openModal} />
         <Suspense fallback={null}>
           <Divider />
           <Process />
           <Divider />
+        </Suspense>
+        <ComparisonSection onAngebot={openModal} />
+        <Suspense fallback={null}>
+          <Divider />
           <Services onAngebot={openModal} />
           <Divider />
           <Speicher onAngebot={openModal} />
-          <Divider />
-          <Foerderung />
           <Divider />
           <Stats onAngebot={openModal} />
           <Divider />

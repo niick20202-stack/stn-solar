@@ -27,20 +27,19 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
     <section
       id="speicher"
       className="relative z-10 py-14 md:py-24 px-5 md:px-6 overflow-hidden"
-      style={{ background: 'linear-gradient(to bottom, #131313, #0c0f1a, #131313)' }}
     >
       {/* Ambient glows */}
       <div
         className="absolute -top-32 right-0 w-[50vw] h-[50vw] pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(100,149,237,0.05) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(245,176,64,0.04) 0%, transparent 65%)',
           transform: 'translate(20%, -20%)',
         }}
       />
       <div
         className="absolute bottom-0 left-0 w-[40vw] h-[40vw] pointer-events-none pulse-soft"
         style={{
-          background: 'radial-gradient(circle, rgba(245,176,64,0.05) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(245,176,64,0.03) 0%, transparent 65%)',
           transform: 'translate(-30%, 30%)',
         }}
       />
@@ -61,11 +60,12 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               Energiespeicher
             </span>
             <h2
-              className="font-black text-white mt-3 mb-4 md:mb-6 leading-tight"
+              className="font-black mt-3 mb-4 md:mb-6 leading-tight"
               style={{
                 fontFamily: 'DM Sans, sans-serif',
                 fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 letterSpacing: '-0.04em',
+                color: '#1a1a1a',
               }}
             >
               Strom speichern,{' '}
@@ -75,7 +75,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
             </h2>
             <p
               className="text-base leading-relaxed mb-5 md:mb-8 max-w-md"
-              style={{ color: 'rgba(209,197,176,0.72)', lineHeight: 1.7 }}
+              style={{ color: 'rgba(26,26,26,0.6)', lineHeight: 1.7 }}
             >
               Unser Hochleistungsspeicher hält Ihren selbst erzeugten Solarstrom auch dann
               verfügbar, wenn die Sonne nicht scheint — für maximale Unabhängigkeit rund um
@@ -96,7 +96,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                   <div
                     className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{
-                      background: 'rgba(245,176,64,0.1)',
+                      background: 'rgba(245,176,64,0.08)',
                       border: '1px solid rgba(245,176,64,0.18)',
                     }}
                   >
@@ -109,7 +109,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                   </div>
                   <span
                     className="text-sm font-medium"
-                    style={{ color: 'rgba(229,226,225,0.85)' }}
+                    style={{ color: 'rgba(26,26,26,0.8)' }}
                   >
                     {f.label}
                   </span>
@@ -121,8 +121,8 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               className="cta-pill flex items-center gap-2 rounded-full px-7 py-3.5 font-black text-xs uppercase"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif',
-                background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                color: '#2a1600',
+                background: '#f5900a',
+                color: '#ffffff',
                 letterSpacing: '0.12em',
                 border: 'none',
                 cursor: 'pointer',
@@ -131,10 +131,8 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.97 }}
             >
-              <span className="material-symbols-outlined icon-filled text-sm">
-                battery_charging_full
-              </span>
               Speicher anfragen
+              <span className="cta-icon"><span className="material-symbols-outlined icon-filled" style={{fontSize:"14px"}}>battery_charging_full</span></span>
             </motion.button>
           </motion.div>
 
@@ -153,13 +151,13 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               className="w-full h-full object-cover absolute inset-0"
               loading="lazy"
               decoding="async"
-              style={{ opacity: 0.5 }}
+              style={{ opacity: 0.4 }}
             />
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(135deg, rgba(12,15,26,0.65) 0%, rgba(12,15,26,0.25) 100%)',
+                  'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)',
               }}
             />
 
@@ -168,8 +166,8 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               <motion.div
                 className="self-end px-4 py-3 rounded-2xl"
                 style={{
-                  background: 'rgba(18,18,18,0.82)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.92)',
+                  border: '1px solid rgba(245,176,64,0.15)',
                   backdropFilter: 'blur(12px)',
                 }}
                 initial={{ opacity: 0, y: -10 }}
@@ -178,7 +176,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
                 <div
-                  className="font-black text-white leading-none"
+                  className="font-black leading-none"
                   style={{
                     fontFamily: 'DM Mono, monospace',
                     fontSize: '1.8rem',
@@ -191,7 +189,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                   className="text-[9px] uppercase tracking-widest font-bold mt-1"
                   style={{
                     fontFamily: 'Space Grotesk, sans-serif',
-                    color: 'rgba(255,255,255,0.4)',
+                    color: 'rgba(26,26,26,0.5)',
                   }}
                 >
                   Eigenverbrauch
@@ -201,8 +199,8 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
               <motion.div
                 className="self-start px-4 py-3 rounded-2xl"
                 style={{
-                  background: 'rgba(18,18,18,0.82)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.92)',
+                  border: '1px solid rgba(245,176,64,0.15)',
                   backdropFilter: 'blur(12px)',
                 }}
                 initial={{ opacity: 0, y: 10 }}
@@ -211,7 +209,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
                 <div
-                  className="font-black text-white leading-none"
+                  className="font-black leading-none"
                   style={{
                     fontFamily: 'DM Mono, monospace',
                     fontSize: '1.8rem',
@@ -224,7 +222,7 @@ export default function Speicher({ onAngebot }: { onAngebot: () => void }) {
                   className="text-[9px] uppercase tracking-widest font-bold mt-1"
                   style={{
                     fontFamily: 'Space Grotesk, sans-serif',
-                    color: 'rgba(255,255,255,0.4)',
+                    color: 'rgba(26,26,26,0.5)',
                   }}
                 >
                   Max. Kapazität

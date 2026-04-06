@@ -11,7 +11,7 @@ const steps = [
     number: '02',
     icon: 'design_services',
     title: 'Individuelle Planung',
-    desc: '3D-Simulation, Wirtschaftlichkeitsanalyse und Förderermittlung – maßgeschneidert für Ihr Dach und Ihren Verbrauch.',
+    desc: 'Professionelle Planungssoftware erstellt binnen Minuten Ihren individuellen Solarplan — mit 3D-Dachansicht, Ertragsberechnung und Förderermittlung. Digital, transparent, kostenlos.',
   },
   {
     number: '03',
@@ -21,9 +21,9 @@ const steps = [
   },
   {
     number: '04',
-    icon: 'bolt',
-    title: 'Energie & Freiheit',
-    desc: 'Ihre Anlage produziert – Sie sparen. Mit dauerhaftem Monitoring und proaktivem Service bleiben Sie auf Höchstleistung.',
+    icon: 'electrical_services',
+    title: 'Netzanschluss & Einspeisung',
+    desc: 'Wir melden Ihre Anlage offiziell beim Netzbetreiber an, schließen den Einspeisevertrag ab und nehmen alles in Betrieb — Sie verdienen ab Tag 1 mit.',
   },
 ]
 
@@ -56,16 +56,24 @@ export default function Process() {
             Der Prozess
           </span>
           <h2
-            className="font-black text-white mt-2 leading-tight"
+            className="font-black mt-2 leading-tight"
             style={{
               fontFamily: 'DM Sans, sans-serif',
               fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               letterSpacing: '-0.04em',
+              color: '#1a1a1a',
             }}
           >
-            In 4 Schritten zu{' '}
-            <span style={gradientText}>Ihrer Anlage</span>
+            Von der Anfrage zur Anlage{' '}
+            <span style={gradientText}>in 6 Wochen.</span>
           </h2>
+          <p
+            className="mt-3 text-sm max-w-lg"
+            style={{ color: 'rgba(26,26,26,0.55)', lineHeight: 1.7, fontFamily: 'DM Sans' }}
+          >
+            Kein Konzern, keine Warteschleife. Unser Team in Neuss übernimmt alles —
+            von der ersten Beratung bis zum Netzanschluss.
+          </p>
         </motion.div>
 
         {/* Steps grid */}
@@ -82,11 +90,7 @@ export default function Process() {
           {steps.map((step, i) => (
             <motion.div
               key={step.number}
-              className="glow-card relative flex flex-col items-start md:items-center text-left md:text-center gap-4 p-5 md:p-7 rounded-3xl"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
+              className="feature-card glow-card relative flex flex-col items-start md:items-center text-left md:text-center gap-4 p-5 md:p-7 rounded-3xl"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -96,7 +100,7 @@ export default function Process() {
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 relative z-10"
                 style={{
-                  background: 'rgba(245,176,64,0.10)',
+                  background: 'rgba(245,176,64,0.08)',
                   border: '1px solid rgba(245,176,64,0.22)',
                 }}
               >
@@ -115,18 +119,19 @@ export default function Process() {
 
               <div>
                 <h3
-                  className="font-black text-white leading-tight mb-2"
+                  className="font-black leading-tight mb-2"
                   style={{
                     fontFamily: 'DM Sans, sans-serif',
                     fontSize: '1.05rem',
                     letterSpacing: '-0.02em',
+                    color: '#1a1a1a',
                   }}
                 >
                   {step.title}
                 </h3>
                 <p
                   className="text-sm leading-relaxed"
-                  style={{ color: 'rgba(209,197,176,0.6)', lineHeight: 1.65 }}
+                  style={{ color: 'rgba(26,26,26,0.55)', lineHeight: 1.65 }}
                 >
                   {step.desc}
                 </p>

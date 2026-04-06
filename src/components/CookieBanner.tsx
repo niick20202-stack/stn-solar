@@ -84,8 +84,8 @@ export default function CookieBanner() {
                 className="flex-1 rounded-xl py-2.5 text-xs font-black uppercase tracking-wider"
                 style={{
                   fontFamily: 'Space Grotesk, sans-serif',
-                  background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                  color: '#2a1600',
+                  background: '#f5900a',
+                  color: '#ffffff',
                   border: 'none',
                   cursor: 'pointer',
                   letterSpacing: '0.08em',

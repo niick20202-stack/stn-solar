@@ -52,32 +52,40 @@ export default function ReonicModal({ open, onClose }: Props) {
               style={{
                 background: 'rgba(22,22,22,0.97)',
                 border: '1px solid rgba(255,255,255,0.10)',
-                boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+                boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
               <div
                 className="flex items-center justify-between px-7 py-5"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined icon-filled text-xl" style={{ color: '#f5b040' }}>
                     wb_sunny
                   </span>
-                  <span
-                    className="font-bold text-white text-base"
-                    style={{ fontFamily: 'DM Sans, sans-serif', letterSpacing: '-0.02em' }}
-                  >
-                    Kostenloses Angebot
-                  </span>
+                  <div>
+                    <p
+                      className="font-black leading-tight"
+                      style={{ fontFamily: 'DM Sans, sans-serif', fontSize: '1rem', letterSpacing: '-0.02em', color: '#e5e2e1' }}
+                    >
+                      Ihr persönlicher Solarplan
+                    </p>
+                    <p
+                      className="text-[10px] font-bold uppercase tracking-widest mt-0.5"
+                      style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#f5b040' }}
+                    >
+                      Kostenlos · Unverbindlich · In Minuten
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={onClose}
                   className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.10)' }}
                 >
-                  <span className="material-symbols-outlined text-lg" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  <span className="material-symbols-outlined text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>
                     close
                   </span>
                 </button>

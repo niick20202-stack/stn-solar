@@ -9,10 +9,10 @@ const Footer = lazy(() => import('../components/Footer'))
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-10">
-      <h2 className="text-white font-black mb-3" style={{ fontFamily: 'DM Sans', fontSize: '1.1rem', letterSpacing: '-0.03em' }}>
+      <h2 className="font-black mb-3" style={{ fontFamily: 'DM Sans', fontSize: '1.1rem', letterSpacing: '-0.03em', color: '#1a1a1a' }}>
         {title}
       </h2>
-      <div className="text-sm leading-relaxed space-y-2" style={{ color: 'rgba(209,197,176,0.65)', fontFamily: 'DM Sans', lineHeight: 1.8 }}>
+      <div className="text-sm leading-relaxed space-y-2" style={{ color: 'rgba(26,26,26,0.65)', fontFamily: 'DM Sans', lineHeight: 1.8 }}>
         {children}
       </div>
     </div>
@@ -22,7 +22,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function Impressum() {
   const [modalOpen, setModalOpen] = useState(false)
   return (
-    <div className="grain relative min-h-screen" style={{ backgroundColor: '#131313' }}>
+    <div className="grain relative min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <ReonicModal open={modalOpen} onClose={() => setModalOpen(false)} />
       <Navbar onAngebot={() => setModalOpen(true)} />
       <main className="relative z-10 pt-36 pb-24 px-6">
@@ -32,43 +32,29 @@ export default function Impressum() {
               style={{ fontFamily: 'Space Grotesk', color: '#f5b040' }}>
               Rechtliches
             </span>
-            <h1 className="text-white font-black mb-12 leading-tight"
-              style={{ fontFamily: 'DM Sans', fontSize: 'clamp(2rem,5vw,3rem)', letterSpacing: '-0.04em' }}>
+            <h1 className="font-black mb-12 leading-tight"
+              style={{ fontFamily: 'DM Sans', fontSize: 'clamp(2rem,5vw,3rem)', letterSpacing: '-0.04em', color: '#1a1a1a' }}>
               Impressum
             </h1>
 
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: '2.5rem' }}>
+            <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '2.5rem' }}>
               <Section title="Angaben gemäß § 5 TMG">
-                <p>STN Solar GmbH<br />
-                Musterstraße 1<br />
-                12345 Musterstadt<br />
+                <p>STN Solar<br />
+                Inhaber: Serhiy Panasyuk<br />
+                In der Hött 1<br />
+                41469 Neuss<br />
                 Deutschland</p>
               </Section>
 
-              <Section title="Vertreten durch">
-                <p>Max Mustermann (Geschäftsführer)</p>
-              </Section>
-
               <Section title="Kontakt">
-                <p>Telefon: +49 (0) 123 456 7890<br />
+                <p>Telefon: [BITTE EINTRAGEN]<br />
                 E-Mail: info@stn-solar.de<br />
                 Website: www.stn-solar.de</p>
               </Section>
 
-              <Section title="Registereintrag">
-                <p>Eintragung im Handelsregister.<br />
-                Registergericht: Amtsgericht Musterstadt<br />
-                Registernummer: HRB 12345</p>
-              </Section>
-
-              <Section title="Umsatzsteuer-ID">
+              <Section title="Umsatzsteuer">
                 <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                DE 123 456 789</p>
-              </Section>
-
-              <Section title="Berufsbezeichnung und berufsrechtliche Regelungen">
-                <p>Elektrofachbetrieb gemäß ZVEH<br />
-                Zuständige Kammer: Handwerkskammer Musterstadt</p>
+                [BITTE USt-IdNr. oder Steuernummer eintragen]</p>
               </Section>
 
               <Section title="EU-Streitschlichtung">

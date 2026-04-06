@@ -20,14 +20,14 @@ const foerderungen = [
     title: 'Steuerfreiheit',
     subtitle: 'Bis 30 kWp',
     desc: 'Einnahmen aus der Einspeisung sind steuerbefreit. Kein Gewerbeschein, keine Steuererklärung – simpel und vorteilhaft.',
-    color: '#5dca8a',
+    color: '#e07018',
   },
   {
     icon: 'electric_bolt',
     title: 'EEG-Vergütung',
     subtitle: '20 Jahre garantiert',
     desc: 'Überschüssigen Strom ins Netz einspeisen und dafür vergütet werden – gesetzlich für 20 Jahre festgeschrieben.',
-    color: '#e07018',
+    color: '#e89230',
   },
 ]
 
@@ -76,11 +76,12 @@ export default function Foerderung() {
             Förderungen & Finanzierung
           </span>
           <h2
-            className="font-black text-white mt-2 leading-tight"
+            className="font-black mt-2 leading-tight"
             style={{
               fontFamily: 'DM Sans, sans-serif',
               fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               letterSpacing: '-0.04em',
+              color: '#1a1a1a',
             }}
           >
             Der Staat{' '}
@@ -88,7 +89,7 @@ export default function Foerderung() {
           </h2>
           <p
             className="mt-4 max-w-xl text-base"
-            style={{ color: 'rgba(209,197,176,0.65)', lineHeight: 1.7 }}
+            style={{ color: 'rgba(26,26,26,0.6)', lineHeight: 1.7 }}
           >
             Kombinieren Sie staatliche Förderungen intelligent — und machen Sie Ihre
             Solaranlage zur rentabelsten Investition des Jahrzehnts.
@@ -100,11 +101,7 @@ export default function Foerderung() {
           {foerderungen.map((f, i) => (
             <motion.div
               key={f.title}
-              className="glow-card rounded-3xl p-4 md:p-6 flex flex-col gap-3 md:gap-4"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
+              className="feature-card glow-card rounded-3xl p-4 md:p-6 flex flex-col gap-3 md:gap-4"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -126,11 +123,12 @@ export default function Foerderung() {
               </div>
               <div>
                 <p
-                  className="font-black text-white leading-tight"
+                  className="font-black leading-tight"
                   style={{
                     fontFamily: 'DM Sans, sans-serif',
                     fontSize: '1.1rem',
                     letterSpacing: '-0.02em',
+                    color: '#1a1a1a',
                   }}
                 >
                   {f.title}
@@ -139,7 +137,7 @@ export default function Foerderung() {
                   className="text-[9px] font-bold uppercase tracking-widest mt-0.5"
                   style={{
                     fontFamily: 'Space Grotesk, sans-serif',
-                    color: 'rgba(255,255,255,0.3)',
+                    color: 'rgba(26,26,26,0.4)',
                   }}
                 >
                   {f.subtitle}
@@ -147,7 +145,7 @@ export default function Foerderung() {
               </div>
               <p
                 className="text-sm leading-relaxed"
-                style={{ color: 'rgba(209,197,176,0.6)', lineHeight: 1.65 }}
+                style={{ color: 'rgba(26,26,26,0.55)', lineHeight: 1.65 }}
               >
                 {f.desc}
               </p>
@@ -166,7 +164,7 @@ export default function Foerderung() {
             className="text-center text-[9px] font-bold uppercase tracking-[0.35em] mb-6"
             style={{
               fontFamily: 'Space Grotesk, sans-serif',
-              color: 'rgba(255,255,255,0.25)',
+              color: 'rgba(26,26,26,0.35)',
             }}
           >
             Zertifizierte Markenpartner
@@ -174,15 +172,15 @@ export default function Foerderung() {
           <div
             className="flex flex-wrap justify-center items-center gap-3 px-6 py-5 rounded-2xl"
             style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(0,0,0,0.02)',
+              border: '1px solid rgba(0,0,0,0.06)',
             }}
           >
             {partners.map((p) => (
               <div
                 key={p.label}
                 className="flex items-center gap-2 px-4 py-2 rounded-full opacity-40 hover:opacity-80 transition-opacity duration-300"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ border: '1px solid rgba(0,0,0,0.08)' }}
               >
                 <span
                   className="material-symbols-outlined icon-filled text-sm"
@@ -191,8 +189,8 @@ export default function Foerderung() {
                   {p.icon}
                 </span>
                 <span
-                  className="text-[10px] font-bold uppercase tracking-widest text-white"
-                  style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                  className="text-[10px] font-bold uppercase tracking-widest"
+                  style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#1a1a1a' }}
                 >
                   {p.label}
                 </span>

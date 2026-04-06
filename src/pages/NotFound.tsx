@@ -60,15 +60,15 @@ export default function NotFound() {
               className="cta-pill inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-black text-xs uppercase"
               style={{
                 fontFamily: 'Space Grotesk',
-                background: 'linear-gradient(135deg, #f5b040, #e07018)',
-                color: '#2a1600',
+                background: '#f5900a',
+                color: '#ffffff',
                 letterSpacing: '0.12em',
                 cursor: 'pointer',
               }}
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.97 }}>
-              <span className="material-symbols-outlined icon-filled text-sm">home</span>
               Zur Startseite
+              <span className="cta-icon"><span className="material-symbols-outlined icon-filled" style={{fontSize:"14px"}}>home</span></span>
             </motion.div>
           </Link>
           <Link to="/referenzen">
